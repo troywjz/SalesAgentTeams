@@ -1,0 +1,6 @@
+来源,用户消息,销售回复,上文记忆
+demo-001,你好，我想了解适合零基础的课程,你好，请问你更想提升哪类工作效率？,"{\"history_summary\":\"客户尚未明确目标\",\"customer_profile\":{}}"
+demo-002,课程大概多少钱,价格需要结合你的目标和方案确认，我先了解一下使用场景。,"{\"history_summary\":\"客户开始关注价格\",\"customer_profile\":{\"intent\":\"price_inquiry\"}}"
+demo-003,我担心自己跟不上,这个顾虑很实际，我们可以从最常用的工作场景开始。,"{\"history_summary\":\"客户担心学习难度\",\"customer_profile\":{\"concern\":\"学习难度\"}}"
+demo-004,可以报名吗,可以，接下来由顾问和你确认方案、价格及付款细节。,"{\"history_summary\":\"客户表达明确报名意向\",\"customer_profile\":{\"intent\":\"high_intent\"}}"
+demo-005,我想先看看课程内容,可以先从你的实际工作场景来判断适合的课程方向。,"{\"history_summary\":\"客户在了解课程内容\",\"customer_profile\":{\"intent\":\"course_inquiry\"}}"

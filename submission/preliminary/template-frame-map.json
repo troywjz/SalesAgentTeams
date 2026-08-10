@@ -1,0 +1,25 @@
+{
+  "sourcePptx": "D:/code/GOAI/比赛资料/GOAI参赛作品提交模板.pptx",
+  "templateId": "GOAI-Agent-Infra-19-slide-template",
+  "outputSlides": [
+    {"outputSlide":1,"sourceSlide":1,"reuseMode":"duplicate-slide","narrativeRole":"cover","editTargets":[{"action":"rewrite","shapeId":"sh/65g3298r","reason":"项目名称与参赛身份"}]},
+    {"outputSlide":2,"sourceSlide":2,"reuseMode":"duplicate-slide","narrativeRole":"summary","editTargets":[{"action":"rewrite","shapeId":"sh/9072xkry","reason":"一页纸速览标题"}]},
+    {"outputSlide":3,"sourceSlide":3,"reuseMode":"duplicate-slide","narrativeRole":"agenda","editTargets":[{"action":"rewrite","shapeId":"sh/3ah8rqlg","reason":"目录"}]},
+    {"outputSlide":4,"sourceSlide":4,"reuseMode":"duplicate-slide","narrativeRole":"section divider","editTargets":[{"action":"rewrite","shapeId":"sh/1cj2d8b6","reason":"章节标题"}]},
+    {"outputSlide":5,"sourceSlide":5,"reuseMode":"duplicate-slide","narrativeRole":"scenario value","editTargets":[{"action":"rewrite","shapeId":"sh/cf2tcr61","reason":"章节标题"},{"action":"replace","shapeId":"im/apobah8v","reason":"替换场景示意图"},{"action":"replace","shapeId":"im/bqxsjm9g","reason":"替换价值示意图"}]},
+    {"outputSlide":6,"sourceSlide":6,"reuseMode":"duplicate-slide","narrativeRole":"section divider","editTargets":[{"action":"rewrite","shapeId":"sh/yhg7epsj","reason":"章节标题"}]},
+    {"outputSlide":7,"sourceSlide":7,"reuseMode":"duplicate-slide","narrativeRole":"architecture","editTargets":[{"action":"rewrite","shapeId":"sh/cb2tkvap","reason":"架构标题"},{"action":"replace","shapeId":"im/zi5kjqlw","reason":"替换架构图"}]},
+    {"outputSlide":8,"sourceSlide":8,"reuseMode":"duplicate-slide","narrativeRole":"section divider","editTargets":[{"action":"rewrite","shapeId":"sh/6h0fypgb","reason":"章节标题"}]},
+    {"outputSlide":9,"sourceSlide":9,"reuseMode":"duplicate-slide","narrativeRole":"multi-agent collaboration","editTargets":[{"action":"rewrite","shapeId":"sh/1cfmhgne","reason":"协同标题"},{"action":"replace","shapeId":"im/47atkjyh","reason":"替换协同图"},{"action":"replace","shapeId":"im/03edcnip","reason":"替换状态图"}]},
+    {"outputSlide":10,"sourceSlide":10,"reuseMode":"duplicate-slide","narrativeRole":"section divider","editTargets":[{"action":"rewrite","shapeId":"sh/xc3mho32","reason":"章节标题"}]},
+    {"outputSlide":11,"sourceSlide":11,"reuseMode":"duplicate-slide","narrativeRole":"skill system","editTargets":[{"action":"rewrite","shapeId":"sh/xcryxg7y","reason":"Skill 标题"},{"action":"replace","shapeId":"im/sj6l83a5","reason":"替换 Skill 图"}]},
+    {"outputSlide":12,"sourceSlide":12,"reuseMode":"duplicate-slide","narrativeRole":"section divider","editTargets":[{"action":"rewrite","shapeId":"sh/q903ad4n","reason":"章节标题"}]},
+    {"outputSlide":13,"sourceSlide":13,"reuseMode":"duplicate-slide","narrativeRole":"engineering evidence","editTargets":[{"action":"rewrite","shapeId":"sh/q50nydsj","reason":"工程证据标题"},{"action":"replace","shapeId":"im/t4rmdo3i","reason":"移除模板示例"},{"action":"replace","shapeId":"im/poji5gju","reason":"移除模板示例"},{"action":"replace","shapeId":"im/4na1wb29","reason":"移除模板示例"},{"action":"replace","shapeId":"im/3m10361o","reason":"移除模板示例"}]},
+    {"outputSlide":14,"sourceSlide":14,"reuseMode":"duplicate-slide","narrativeRole":"section divider","editTargets":[{"action":"rewrite","shapeId":"sh/xc7eds76","reason":"章节标题"}]},
+    {"outputSlide":15,"sourceSlide":15,"reuseMode":"duplicate-slide","narrativeRole":"open source","editTargets":[{"action":"rewrite","shapeId":"sh/547mhg3m","reason":"开源标题"}]},
+    {"outputSlide":16,"sourceSlide":16,"reuseMode":"duplicate-slide","narrativeRole":"section divider","editTargets":[{"action":"rewrite","shapeId":"sh/ytkf2h8j","reason":"章节标题"}]},
+    {"outputSlide":17,"sourceSlide":17,"reuseMode":"duplicate-slide","narrativeRole":"progress","editTargets":[{"action":"rewrite","shapeId":"sh/1c7e50ni","reason":"进展标题"},{"action":"replace","shapeId":"im/orudgnqh","reason":"移除模板示例"},{"action":"replace","shapeId":"im/4j2d07mh","reason":"移除模板示例"}]},
+    {"outputSlide":18,"sourceSlide":18,"reuseMode":"duplicate-slide","narrativeRole":"section divider","editTargets":[{"action":"rewrite","shapeId":"sh/itw3upcf","reason":"团队章节标题"}]},
+    {"outputSlide":19,"sourceSlide":19,"reuseMode":"duplicate-slide","narrativeRole":"team profile","editTargets":[{"action":"rewrite","shapeId":"sh/9gb6xgbi","reason":"团队标题"},{"action":"rewrite","shapeId":"sh/ul8fm9gf","reason":"个人团队介绍"}]}
+  ]
+}

@@ -1,0 +1,132 @@
+apiVersion: agentteams.io/v1beta1
+kind: Worker
+metadata:
+  name: sales-intent-worker
+spec:
+  model: qwen3.5-plus
+  runtime: qwenpaw
+  skills: [intent-classification, evidence-handoff]
+  mcpServers:
+    - name: sales-agent-bridge
+      url: http://host.docker.internal:18081/mcp
+      transport: http
+  package: file://./agentteams/worker-packages/intent_worker.zip
+  soul: |
+    你是 intent_worker，只负责意图识别和结构化输出。
+---
+apiVersion: agentteams.io/v1beta1
+kind: Worker
+metadata:
+  name: sales-sop-worker
+spec:
+  model: qwen3.5-plus
+  runtime: qwenpaw
+  skills: [sop-decision, evidence-handoff]
+  mcpServers:
+    - name: sales-agent-bridge
+      url: http://host.docker.internal:18081/mcp
+      transport: http
+  package: file://./agentteams/worker-packages/sop_worker.zip
+  soul: |
+    你是 sop_worker，只负责销售阶段和下一步动作决策。
+---
+apiVersion: agentteams.io/v1beta1
+kind: Worker
+metadata:
+  name: sales-knowledge-worker
+spec:
+  model: qwen3.5-plus
+  runtime: qwenpaw
+  skills: [knowledge-grounding, evidence-handoff]
+  mcpServers:
+    - name: sales-agent-bridge
+      url: http://host.docker.internal:18081/mcp
+      transport: http
+  package: file://./agentteams/worker-packages/knowledge_worker.zip
+  soul: |
+    你是 knowledge_worker，只返回有证据的授权销售知识。
+---
+apiVersion: agentteams.io/v1beta1
+kind: Worker
+metadata:
+  name: sales-conversation-worker
+spec:
+  model: qwen3.5-plus
+  runtime: qwenpaw
+  skills: [reply-drafting, team-lead-coordination, evidence-handoff]
+  mcpServers:
+    - name: sales-agent-bridge
+      url: http://host.docker.internal:18081/mcp
+      transport: http
+  package: file://./agentteams/worker-packages/conversation_worker.zip
+  soul: |
+    你是 conversation_worker，也是本 Team 的 Team Leader。你负责协调其他销售 Worker，汇总结果并生成待审核回复。
+---
+apiVersion: agentteams.io/v1beta1
+kind: Worker
+metadata:
+  name: sales-safety-worker
+spec:
+  model: qwen3.5-plus
+  runtime: qwenpaw
+  skills: [safety-review, evidence-handoff]
+  mcpServers:
+    - name: sales-agent-bridge
+      url: http://host.docker.internal:18081/mcp
+      transport: http
+  package: file://./agentteams/worker-packages/safety_worker.zip
+  soul: |
+    你是 safety_worker，所有客户可见回复必须经过你审核。
+---
+apiVersion: agentteams.io/v1beta1
+kind: Worker
+metadata:
+  name: sales-memory-worker
+spec:
+  model: qwen3.5-plus
+  runtime: qwenpaw
+  skills: [memory-update, evidence-handoff]
+  mcpServers:
+    - name: sales-agent-bridge
+      url: http://host.docker.internal:18081/mcp
+      transport: http
+  package: file://./agentteams/worker-packages/memory_worker.zip
+  soul: |
+    你是 memory_worker，只处理授权的销售会话记忆。
+---
+apiVersion: agentteams.io/v1beta1
+kind: Team
+metadata:
+  name: sales-agent-team
+spec:
+  description: "六 Worker 企业销售多智能体协同团队"
+  peerMentions: true
+  heartbeatEvery: 10m
+  workerMembers:
+    - name: sales-conversation-worker
+      role: team_leader
+    - name: sales-intent-worker
+      role: worker
+    - name: sales-sop-worker
+      role: worker
+    - name: sales-knowledge-worker
+      role: worker
+    - name: sales-safety-worker
+      role: worker
+    - name: sales-memory-worker
+      role: worker
+---
+apiVersion: agentteams.io/v1beta1
+kind: Manager
+metadata:
+  name: default
+spec:
+  model: qwen3.5-plus
+  runtime: qwenpaw
+  mcpServers:
+    - name: sales-evaluation-insights
+      url: http://host.docker.internal:18082/mcp
+      transport: http
+  config:
+    heartbeatInterval: 15m
+    workerIdleTimeout: 720m

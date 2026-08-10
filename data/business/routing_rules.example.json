@@ -1,0 +1,114 @@
+{
+  "routing_rules": {
+    "strong_handover_keywords": [
+      "投诉",
+      "举报",
+      "诈骗",
+      "骗子",
+      "退款",
+      "退费",
+      "拉黑",
+      "报警",
+      "律师",
+      "起诉",
+      "立刻报名",
+      "现在付款",
+      "马上买",
+      "转人工",
+      "人工"
+    ],
+    "extreme_emotion_keywords": [
+      "气死",
+      "崩溃",
+      "烦死",
+      "别烦我",
+      "太差了",
+      "垃圾",
+      "滚"
+    ],
+    "knowledge_keywords": [
+      "多少钱",
+      "价格",
+      "费用",
+      "优惠",
+      "折扣",
+      "套餐",
+      "产品",
+      "课程",
+      "服务",
+      "包含",
+      "区别",
+      "对比",
+      "适合",
+      "报名",
+      "退款",
+      "协议",
+      "合同",
+      "发票",
+      "证书",
+      "上课",
+      "交付",
+      "时间"
+    ],
+    "profile_update_keywords": [
+      "我是",
+      "我在",
+      "我想",
+      "我希望",
+      "我准备",
+      "预算",
+      "年龄",
+      "学历",
+      "工作",
+      "目标",
+      "基础",
+      "经验",
+      "急",
+      "担心"
+    ],
+    "small_talk_keywords": [
+      "你好",
+      "您好",
+      "在吗",
+      "有人吗",
+      "谢谢",
+      "好的",
+      "嗯",
+      "行"
+    ],
+    "small_talk_max_chars": 20,
+    "intent_handover_categories": [
+      "high_intent"
+    ],
+    "intent_handover_purchase_intents": [
+      "high"
+    ],
+    "intent_handover_emotions": [
+      "impatient"
+    ],
+    "intent_direct_reply_categories": [
+      "greeting",
+      "off_topic"
+    ],
+    "intent_context_categories": [
+      "course_inquiry",
+      "price_inquiry",
+      "objection"
+    ],
+    "safety_max_review_count": 3,
+    "knowledge_sufficient_values": [
+      "sufficient",
+      "enough",
+      "true",
+      "yes",
+      "充足"
+    ],
+    "knowledge_insufficient_values": [
+      "insufficient",
+      "not_enough",
+      "false",
+      "no",
+      "不足"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="1000" height="560">
+  <rect width="1000" height="560" fill="#ffffff"/>
+  <text x="500" y="40" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="25" font-weight="700" fill="#0f172a">一次销售回合的可见协作链路</text>
+  <rect x="400" y="70" width="200" height="62" rx="16" fill="#0f172a"/>
+  <text x="500" y="108" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="20" font-weight="700" fill="#fff">Manager</text>
+  <line x1="500" y1="132" x2="500" y2="168" stroke="#2563eb" stroke-width="4"/>
+  <polygon points="492,162 508,162 500,176" fill="#2563eb"/>
+  <rect x="350" y="182" width="300" height="62" rx="16" fill="#2563eb"/>
+  <text x="500" y="220" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="20" font-weight="700" fill="#fff">Conversation Team Leader</text>
+  <g font-family="Microsoft YaHei, Arial" font-size="16" font-weight="700" text-anchor="middle">
+    <rect x="40" y="300" width="135" height="72" rx="14" fill="#dbeafe" stroke="#60a5fa"/><text x="107" y="343" fill="#1e3a8a">Intent</text>
+    <rect x="195" y="300" width="135" height="72" rx="14" fill="#e0e7ff" stroke="#818cf8"/><text x="262" y="343" fill="#3730a3">SOP</text>
+    <rect x="350" y="300" width="135" height="72" rx="14" fill="#dcfce7" stroke="#4ade80"/><text x="417" y="343" fill="#166534">Knowledge</text>
+    <rect x="515" y="300" width="135" height="72" rx="14" fill="#fee2e2" stroke="#f87171"/><text x="582" y="343" fill="#991b1b">Safety</text>
+    <rect x="680" y="300" width="135" height="72" rx="14" fill="#fef3c7" stroke="#fbbf24"/><text x="747" y="343" fill="#92400e">Memory</text>
+  </g>
+  <g stroke="#2563eb" stroke-width="3" fill="none"><line x1="440" y1="244" x2="107" y2="298"/><line x1="470" y1="244" x2="262" y2="298"/><line x1="500" y1="244" x2="417" y2="298"/><line x1="530" y1="244" x2="582" y2="298"/><line x1="560" y1="244" x2="747" y2="298"/></g>
+  <rect x="40" y="426" width="775" height="70" rx="16" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="427" y="456" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="17" fill="#334155">统一 task_id / turn_id / state / evidence_refs</text>
+  <text x="427" y="480" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="15" fill="#64748b">任一高风险节点可暂停并转人工，消息和错误可追溯</text>
+</svg>

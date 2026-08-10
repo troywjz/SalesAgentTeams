@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="1000" height="560">
+  <rect width="1000" height="560" fill="#f8fafc"/>
+  <text x="500" y="42" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="26" font-weight="700" fill="#0f172a">SalesAgentTeams 分层架构</text>
+  <rect x="50" y="78" width="900" height="84" rx="18" fill="#0f172a"/>
+  <text x="500" y="112" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="22" font-weight="700" fill="#ffffff">AgentTeams Manager / Team Leader</text>
+  <text x="500" y="142" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="16" fill="#cbd5e1">任务拆解 · 状态传递 · 可见交接 · 人工介入</text>
+  <line x1="500" y1="162" x2="500" y2="196" stroke="#2563eb" stroke-width="4"/>
+  <polygon points="492,190 508,190 500,204" fill="#2563eb"/>
+  <rect x="50" y="210" width="900" height="120" rx="18" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="500" y="244" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="21" font-weight="700" fill="#1e3a8a">六个业务 Worker</text>
+  <text x="125" y="286" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="16" fill="#1e3a8a">Intent</text>
+  <text x="275" y="286" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="16" fill="#1e3a8a">SOP</text>
+  <text x="425" y="286" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="16" fill="#1e3a8a">Knowledge</text>
+  <text x="575" y="286" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="16" fill="#1e3a8a">Conversation</text>
+  <text x="725" y="286" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="16" fill="#1e3a8a">Safety</text>
+  <text x="875" y="286" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="16" fill="#1e3a8a">Memory</text>
+  <line x1="125" y1="300" x2="875" y2="300" stroke="#60a5fa" stroke-width="2" stroke-dasharray="8 8"/>
+  <rect x="50" y="372" width="420" height="126" rx="18" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+  <text x="260" y="410" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="21" font-weight="700" fill="#065f46">原业务内核</text>
+  <text x="260" y="446" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="16" fill="#047857">LangGraph · SalesGraphState</text>
+  <text x="260" y="474" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="15" fill="#047857">状态、路由、RAG、风控、落库</text>
+  <rect x="530" y="372" width="420" height="126" rx="18" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+  <text x="740" y="410" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="21" font-weight="700" fill="#9a3412">MCP 适配与评估</text>
+  <text x="740" y="446" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="16" fill="#c2410c">销售 Bridge · 评估 Insights</text>
+  <text x="740" y="474" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="15" fill="#c2410c">结构化工具 · 评分 · 3D 热力图</text>
+</svg>

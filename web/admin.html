@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sales Agent 管理员端</title>
+    <link rel="icon" href="/favicon.ico?v=20260507" type="image/svg+xml" />
+    <link rel="stylesheet" href="/static/admin.css?v=windows-demo-config-v2" />
+  </head>
+  <body>
+    <section id="adminLoginView" class="admin-login-view" aria-label="管理员登录">
+      <form id="adminLoginForm" class="admin-login-card">
+        <div class="brand">
+          <img src="/favicon.ico?v=20260507" alt="" />
+          <div>
+            <h1>管理员端登录</h1>
+            <p>登录后查看业务运行与 Agent 效果大屏</p>
+          </div>
+        </div>
+        <label class="admin-login-field">
+          <span>管理员账号</span>
+          <input id="adminUsername" type="text" autocomplete="username" required />
+        </label>
+        <label class="admin-login-field">
+          <span>密码</span>
+          <input id="adminPassword" type="password" autocomplete="current-password" required />
+        </label>
+        <p id="adminLoginError" class="login-error" hidden></p>
+        <button id="adminLoginSubmit" type="submit">登录</button>
+      </form>
+    </section>
+
+    <header class="admin-header" hidden>
+      <div class="brand">
+        <img src="/favicon.ico?v=20260507" alt="" />
+        <div>
+          <h1>管理员端</h1>
+          <p>业务运行与 Agent 效果大屏</p>
+        </div>
+      </div>
+      <nav class="top-links" aria-label="页面跳转">
+        <a href="/sales">销售端</a>
+        <a href="/customer">客户端</a>
+        <button id="adminLogoutButton" type="button">退出</button>
+      </nav>
+    </header>
+
+    <main class="admin-layout" hidden>
+      <section class="toolbar" aria-label="时间范围">
+        <div>
+          <h2>效果大屏</h2>
+          <p id="dashboardUpdatedAt">正在加载</p>
+        </div>
+        <div class="segmented" role="group" aria-label="时间范围">
+          <button type="button" data-range="24h">最近24小时</button>
+          <button type="button" data-range="7d" class="active">最近7天</button>
+          <button type="button" data-range="30d">最近30天</button>
+        </div>
+      </section>
+
+      <section class="panel admin-config-panel" aria-label="运行配置">
+        <header>
+          <div>
+            <h2>运行配置</h2>
+            <span id="adminConfigPath">仅显示可安全修改的配置</span>
+          </div>
+          <div class="config-actions">
+            <button id="saveConfigButton" type="button">保存配置</button>
+            <button id="restartServiceButton" type="button">重启服务</button>
+          </div>
+        </header>
+        <div id="adminConfigForm" class="config-grid"></div>
+        <p id="adminConfigStatus" class="config-status" aria-live="polite"></p>
+      </section>
+
+      <section id="summaryCards" class="summary-grid" aria-label="核心指标"></section>
+
+      <section class="dashboard-grid">
+        <article class="panel panel-wide">
+          <header>
+            <h2>会话与消息趋势</h2>
+            <span>按时间桶聚合</span>
+          </header>
+          <div id="trafficChart" class="chart-box"></div>
+        </article>
+
+        <article class="panel">
+          <header>
+            <h2>SOP 转化漏斗</h2>
+            <span>各阶段到达比例</span>
+          </header>
+          <div id="sopFunnel" class="funnel-box"></div>
+        </article>
+
+        <article class="panel">
+          <header>
+            <h2>意向等级分布</h2>
+            <span>当前客户画像</span>
+          </header>
+          <div id="intentPie" class="pie-box"></div>
+        </article>
+
+        <article class="panel">
+          <header>
+            <h2>SOP 阶段分布</h2>
+            <span>当前会话阶段</span>
+          </header>
+          <div id="stageBars" class="bar-box"></div>
+        </article>
+
+        <article class="panel">
+          <header>
+            <h2>回复来源占比</h2>
+            <span>消息发送方</span>
+          </header>
+          <div id="sourcePie" class="pie-box"></div>
+        </article>
+
+        <article class="panel panel-wide">
+          <header>
+            <h2>Agent 表现</h2>
+            <span>调用量、成功率与耗时</span>
+          </header>
+          <div id="agentTable" class="table-box"></div>
+        </article>
+      </section>
+
+      <section class="rag-section">
+        <div class="section-title">
+          <div>
+            <h2>销售案例 RAG 效果</h2>
+            <p>评估案例检索命中、生成使用和后续客户反馈</p>
+          </div>
+        </div>
+        <div id="ragSummaryCards" class="summary-grid compact"></div>
+        <section class="dashboard-grid rag-grid">
+          <article class="panel panel-wide">
+            <header>
+              <h2>RAG 命中与使用趋势</h2>
+              <span>按时间范围统计</span>
+            </header>
+            <div id="ragTrendChart" class="chart-box"></div>
+          </article>
+          <article class="panel">
+            <header>
+              <h2>RAG 使用对比</h2>
+              <span>使用组 vs 未使用组</span>
+            </header>
+            <div id="ragComparison" class="bar-box"></div>
+          </article>
+          <article class="panel panel-wide">
+            <header>
+              <h2>最近命中明细</h2>
+              <span>检索质量与使用情况</span>
+            </header>
+            <div id="ragRecentTable" class="table-box"></div>
+          </article>
+        </section>
+      </section>
+
+    </main>
+
+    <script src="/static/admin.js?v=windows-demo-config-v2"></script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="1000" height="560">
+  <rect width="1000" height="560" fill="#ffffff"/>
+  <text x="500" y="45" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="25" font-weight="700" fill="#0f172a">当前里程碑与下一步</text>
+  <line x1="140" y1="280" x2="860" y2="280" stroke="#94a3b8" stroke-width="6"/>
+  <g font-family="Microsoft YaHei, Arial" text-anchor="middle">
+    <circle cx="180" cy="280" r="28" fill="#10b981"/><text x="180" y="288" font-size="20" fill="#fff">✓</text>
+    <text x="180" y="205" font-size="18" font-weight="700" fill="#065f46">已完成</text><text x="180" y="345" font-size="15" fill="#475569">六 Worker 适配</text><text x="180" y="372" font-size="15" fill="#475569">77 项测试通过</text>
+    <circle cx="410" cy="280" r="28" fill="#10b981"/><text x="410" y="288" font-size="20" fill="#fff">✓</text>
+    <text x="410" y="205" font-size="18" font-weight="700" fill="#065f46">已完成</text><text x="410" y="345" font-size="15" fill="#475569">Skill + MCP</text><text x="410" y="372" font-size="15" fill="#475569">评估 + 热力图</text>
+    <circle cx="640" cy="280" r="28" fill="#f59e0b"/><text x="640" y="288" font-size="20" fill="#fff">→</text>
+    <text x="640" y="205" font-size="18" font-weight="700" fill="#92400e">下一步</text><text x="640" y="345" font-size="15" fill="#475569">Docker / AgentTeams</text><text x="640" y="372" font-size="15" fill="#475569">完整轨迹冒烟</text>
+    <circle cx="820" cy="280" r="28" fill="#cbd5e1"/><text x="820" y="288" font-size="20" fill="#475569">4</text>
+    <text x="820" y="205" font-size="18" font-weight="700" fill="#475569">后续</text><text x="820" y="345" font-size="15" fill="#475569">授权盲评</text><text x="820" y="372" font-size="15" fill="#475569">Demo 视频</text>
+  </g>
+</svg>

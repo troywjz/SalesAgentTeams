@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sales Agent</title>
+    <link rel="icon" href="/favicon.ico?v=20260507" type="image/svg+xml" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260615-schedule-ui" />
+  </head>
+  <body>
+    <section id="salesLoginView" class="login-view" aria-label="销售登录">
+      <form id="salesLoginForm" class="login-card">
+        <div class="login-brand">
+          <img src="/favicon.ico?v=20260507" alt="" />
+          <div>
+            <h1>销售端登录</h1>
+            <p>使用销售邮箱和密码进入工作台</p>
+          </div>
+        </div>
+        <label class="login-field">
+          <span>销售邮箱</span>
+          <input id="salesLoginEmail" type="email" autocomplete="username" required />
+        </label>
+        <label class="login-field">
+          <span>密码</span>
+          <input id="salesLoginPassword" type="password" autocomplete="current-password" required />
+        </label>
+        <p id="salesLoginError" class="login-error" hidden></p>
+        <button id="salesLoginSubmit" class="login-submit" type="submit">登录</button>
+      </form>
+    </section>
+
+    <header class="brand-bar" hidden>
+      <div class="brand-title">
+        <img src="/favicon.ico?v=20260507" alt="" />
+        <span>Sales Agent</span>
+      </div>
+      <div class="brand-actions" aria-label="面板控制">
+        <span id="salesLoginName" class="sales-login-name"></span>
+        <button id="salesLogoutButton" class="panel-toggle" type="button">退出</button>
+        <button id="toggleContactsButton" class="panel-toggle" type="button" aria-pressed="true">联系人</button>
+        <button id="toggleConsoleButton" class="panel-toggle" type="button" aria-pressed="true">控制台</button>
+      </div>
+    </header>
+
+    <main class="app-shell sales-shell" hidden>
+      <nav class="workspace-nav" aria-label="工作区切换">
+        <button class="workspace-tab" type="button" data-workspace-tab="home" aria-pressed="true">
+          <span class="workspace-tab-icon">首</span>
+          <span>首页</span>
+        </button>
+        <button class="workspace-tab" type="button" data-workspace-tab="contacts" aria-pressed="false">
+          <span class="workspace-tab-icon">联</span>
+          <span>联系人</span>
+        </button>
+        <button class="workspace-tab" type="button" data-workspace-tab="schedule" aria-pressed="false">
+          <span class="workspace-tab-icon">时</span>
+          <span>定时</span>
+        </button>
+      </nav>
+
+      <aside class="session-panel" aria-label="联系人列表">
+        <header class="session-header">
+          <h1 id="leftPanelTitle">联系人</h1>
+          <div class="panel-actions">
+            <button id="newSessionButton" class="icon-button" type="button" title="新建客户" aria-label="新建客户">
+              +
+            </button>
+            <button id="hideContactsButton" class="icon-button" type="button" title="隐藏联系人" aria-label="隐藏联系人">
+              &lt;
+            </button>
+          </div>
+        </header>
+        <div id="contactSearchWrap" class="panel-search" hidden>
+          <input id="contactSearchInput" type="search" placeholder="搜索联系人或会话" autocomplete="off" />
+        </div>
+        <div id="sessionList" class="session-list"></div>
+        <div id="scheduleTaskList" class="session-list" hidden></div>
+      </aside>
+
+      <section id="chatPanel" class="chat-panel" data-workspace-view="home" aria-label="客户对话">
+        <header class="topbar">
+          <div>
+            <h1 id="chatTitle">未开始会话</h1>
+            <p id="typingStatus" class="typing-status" hidden>对方输入中...</p>
+          </div>
+        </header>
+
+        <div id="messages" class="messages"></div>
+
+        <form id="chatForm" class="composer">
+          <textarea
+            id="messageInput"
+            rows="1"
+            autocomplete="off"
+            placeholder="自动回复中，转人工后可输入人工回复"
+          ></textarea>
+          <button type="submit">发送</button>
+        </form>
+      </section>
+
+      <section id="contactDetailPanel" class="contact-detail-panel" aria-label="联系人详情" data-workspace-view="contacts" hidden>
+        <header class="topbar">
+          <div>
+            <h1 id="contactDetailTitle">联系人详情</h1>
+            <p class="typing-status">展示当前选中联系人的阶段、意向、情绪和画像</p>
+          </div>
+        </header>
+        <div id="contactDetailView" class="contact-detail-view"></div>
+      </section>
+
+      <section id="schedulePanel" class="schedule-panel" aria-label="定时发送任务" data-workspace-view="schedule" hidden>
+        <header class="topbar">
+          <div>
+            <h1>定时发送</h1>
+            <p class="typing-status">管理数据库持久化的发送任务</p>
+          </div>
+        </header>
+        <div id="scheduleTaskEditor" class="schedule-detail-view"></div>
+        <div id="scheduleTaskEmpty" class="empty-note" hidden>暂无定时发送任务</div>
+      </section>
+
+      <aside class="debug-panel" aria-label="控制台">
+        <header class="console-header">
+          <h1>控制台</h1>
+          <button id="hideConsoleButton" class="icon-button" type="button" title="隐藏控制台" aria-label="隐藏控制台">
+            &gt;
+          </button>
+        </header>
+
+        <section class="debug-section">
+          <h2>运行状态</h2>
+          <div id="graphRuntime" class="graph-runtime"></div>
+        </section>
+
+        <section class="debug-section">
+          <div class="debug-section-title-row">
+            <h2>阶段进度</h2>
+            <span id="autoFollowupStatus" class="auto-followup-status">自动推进：未启用</span>
+          </div>
+          <div id="stageProgress" class="progress-track"></div>
+        </section>
+
+        <section class="debug-section">
+          <h2>意向等级</h2>
+          <div id="intentProgress" class="level-track"></div>
+        </section>
+
+        <section class="debug-section">
+          <h2>情绪状态</h2>
+          <div id="emotionStatus" class="emotion-track"></div>
+        </section>
+
+        <section class="debug-section">
+          <h2>转人工</h2>
+          <div id="transferStatus" class="transfer-indicator"></div>
+        </section>
+
+        <section class="debug-section">
+          <h2>客户画像</h2>
+          <div id="profileView" class="profile-grid"></div>
+        </section>
+
+        <section class="debug-section agent-section">
+          <h2>Agent 调用链</h2>
+          <div id="agentRuns" class="agent-runs"></div>
+        </section>
+      </aside>
+    </main>
+
+    <div id="confirmModal" class="modal-backdrop" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+        <h2 id="confirmModalTitle"></h2>
+        <p id="confirmModalMessage"></p>
+        <div class="modal-actions">
+          <button id="confirmModalCancel" class="secondary-button" type="button">取消</button>
+          <button id="confirmModalOk" class="primary-button" type="button">确认</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/static/app.js?v=20260622-sales-login"></script>
+  </body>
+</html>

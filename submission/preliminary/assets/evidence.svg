@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="1000" height="560">
+  <rect width="1000" height="560" fill="#ffffff"/>
+  <text x="500" y="40" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="25" font-weight="700" fill="#0f172a">可运行代码与离线评估闭环</text>
+  <g font-family="Microsoft YaHei, Arial" text-anchor="middle">
+    <rect x="40" y="105" width="190" height="88" rx="16" fill="#dbeafe"/><text x="135" y="140" font-size="18" font-weight="700" fill="#1e3a8a">公开数据集</text><text x="135" y="168" font-size="15" fill="#1e40af">UTF-8 CSV</text>
+    <rect x="280" y="105" width="190" height="88" rx="16" fill="#dcfce7"/><text x="375" y="140" font-size="18" font-weight="700" fill="#166534">离线回放</text><text x="375" y="168" font-size="15" fill="#15803d">运行证据 + 盲评模板</text>
+    <rect x="530" y="105" width="190" height="88" rx="16" fill="#fef3c7"/><text x="625" y="140" font-size="18" font-weight="700" fill="#92400e">人工盲评</text><text x="625" y="168" font-size="15" fill="#a16207">真实评分来源</text>
+    <rect x="780" y="105" width="180" height="88" rx="16" fill="#ffedd5"/><text x="870" y="140" font-size="18" font-weight="700" fill="#9a3412">报告与热力图</text><text x="870" y="168" font-size="15" fill="#c2410c">CSV + HTML + JSON</text>
+  </g>
+  <g stroke="#2563eb" stroke-width="4" fill="none"><line x1="230" y1="149" x2="278" y2="149"/><line x1="470" y1="149" x2="528" y2="149"/><line x1="720" y1="149" x2="778" y2="149"/></g>
+  <g fill="#2563eb"><polygon points="270,141 282,149 270,157"/><polygon points="520,141 532,149 520,157"/><polygon points="770,141 782,149 770,157"/></g>
+  <rect x="100" y="260" width="800" height="210" rx="20" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="500" y="302" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="20" font-weight="700" fill="#334155">安全与可审计边界</text>
+  <g font-family="Microsoft YaHei, Arial" font-size="17" fill="#475569"><text x="155" y="345">✓ 不提交密钥与私有聊天</text><text x="155" y="382">✓ MCP 限定 evaluation 目录</text><text x="155" y="419">✓ 无人工评分不生成分数</text><text x="570" y="345">✓ 高风险动作转人工</text><text x="570" y="382">✓ 原始结果与映射分离</text><text x="570" y="419">✓ 每次运行记录 SHA256</text></g>
+</svg>

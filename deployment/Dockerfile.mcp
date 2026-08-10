@@ -1,0 +1,14 @@
+FROM python:3.12-slim
+
+WORKDIR /workspace
+COPY requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+COPY app ./app
+COPY data ./data
+COPY prompts ./prompts
+COPY evaluation ./evaluation
+COPY sales_agent_teams ./sales_agent_teams
+COPY mcp_servers ./mcp_servers
+
+ENV PYTHONUTF8=1
+EXPOSE 8000

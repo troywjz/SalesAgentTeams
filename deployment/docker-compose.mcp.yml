@@ -1,0 +1,26 @@
+services:
+  sales-agent-bridge-mcp:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile.mcp
+    command: ["python", "-m", "mcp_servers.sales_agent_bridge", "--transport", "streamable-http"]
+    env_file:
+      - ../.env
+    environment:
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: 8000
+    ports:
+      - "18081:8000"
+
+  sales-evaluation-insights-mcp:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile.mcp
+    command: ["python", "-m", "mcp_servers.evaluation_insights", "--transport", "streamable-http"]
+    env_file:
+      - ../.env
+    environment:
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: 8000
+    ports:
+      - "18082:8000"

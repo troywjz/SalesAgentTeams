@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sales Agent 客户端</title>
+    <link rel="icon" href="/favicon.ico?v=20260507" type="image/svg+xml" />
+    <link rel="stylesheet" href="/static/styles.css?v=v0.11.1" />
+  </head>
+  <body>
+    <header class="brand-bar">
+      <div class="brand-title">
+        <img src="/favicon.ico?v=20260507" alt="" />
+        <span>Sales Agent</span>
+      </div>
+    </header>
+
+    <main class="app-shell customer-shell">
+      <aside class="session-panel" aria-label="联系人">
+        <header class="session-header">
+          <h1>联系人</h1>
+          <div class="panel-actions">
+            <button id="newSessionButton" class="icon-button" type="button" title="新建会话" aria-label="新建会话">
+              +
+            </button>
+          </div>
+        </header>
+        <div id="sessionList" class="session-list"></div>
+      </aside>
+
+      <section class="chat-panel" aria-label="客户对话">
+        <header class="topbar">
+          <div>
+            <h1 id="chatTitle">未开始会话</h1>
+            <p id="typingStatus" class="typing-status" hidden>对方输入中...</p>
+          </div>
+        </header>
+
+        <div id="messages" class="messages"></div>
+
+        <form id="chatForm" class="composer">
+          <textarea
+            id="messageInput"
+            rows="1"
+            autocomplete="off"
+            placeholder="输入消息，Enter 发送，Shift+Enter 换行"
+          ></textarea>
+          <button type="submit">发送</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="/static/customer.js?v=v0.11.1"></script>
+  </body>
+</html>
