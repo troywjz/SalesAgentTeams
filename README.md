@@ -56,14 +56,18 @@ docker compose -f deployment/docker-compose.mcp.yml up --build
 .\.venv\Scripts\python.exe agentteams\build_worker_packages.py
 ```
 
-然后安装官方 AgentTeams 并应用。`agt` 是 AgentTeams Controller 提供的 CLI，不需要写入 Python `requirements.txt`；Docker 安装模式通过 Controller 容器调用。Worker 包作为公开发布工件从 GitHub Raw 下载：
+然后安装官方 AgentTeams 并应用。`agt` 是 AgentTeams Controller 提供的 CLI，不需要写入 Python `requirements.txt`；Docker 安装模式通过 Controller 容器调用。Worker 包由宿主机的本地只读 HTTP 服务提供给 Worker 容器：
 
 ```powershell
+.\scripts\start_agentteams_package_server.ps1
 docker cp deployment/agentteams/sales-agent-teams.yaml agentteams-controller:/tmp/sales-agent-teams.yaml
 docker exec agentteams-controller agt apply -f /tmp/sales-agent-teams.yaml
+.\scripts\start_agentteams_workers.ps1
 ```
 
-应用前需要准备 AgentTeams 的 LLM 配置、Docker Desktop 和两个 HTTP MCP 服务。详细映射见 `docs/ARCHITECTURE.md`。
+`agt apply` 后建议执行 Worker 健康检查脚本；它会逐个启动退出的 Worker，并同时检查 Docker 状态和容器内 QwenPaw `/api/version`。应用前需要准备 AgentTeams 的 LLM 配置、Docker Desktop 和两个 HTTP MCP 服务。详细映射见 `docs/ARCHITECTURE.md`。
+
+Worker 包服务需要在 `agt apply` 以及后续 Worker 重启期间保持运行；它只提供仓库中的公开 zip 包，不读取密钥或业务数据库。
 
 ## 质量检查
 
