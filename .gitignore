@@ -45,8 +45,9 @@ tmp/
 !docs/
 !docs/**
 
-# Worker 压缩包可由脚本按当前 Skill 版本重建，不直接提交二进制产物
-agentteams/worker-packages/*.zip
+# Worker 压缩包是 AgentTeams 远程 Worker 可读取的公开发布工件；修改 Skill 后用构建脚本更新。
+!agentteams/worker-packages/
+!agentteams/worker-packages/*.zip
 
 # 演示文稿渲染检查产生的本地图片和检查记录
 submission/preliminary/*/
