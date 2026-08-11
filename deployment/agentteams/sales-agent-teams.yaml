@@ -3,7 +3,7 @@ kind: Worker
 metadata:
   name: sales-intent-worker
 spec:
-  model: qwen3.5-plus
+  model: deepseek-v4-flash
   runtime: qwenpaw
   skills: [intent-classification, evidence-handoff]
   mcpServers:
@@ -19,7 +19,7 @@ kind: Worker
 metadata:
   name: sales-sop-worker
 spec:
-  model: qwen3.5-plus
+  model: deepseek-v4-flash
   runtime: qwenpaw
   skills: [sop-decision, evidence-handoff]
   mcpServers:
@@ -35,7 +35,7 @@ kind: Worker
 metadata:
   name: sales-knowledge-worker
 spec:
-  model: qwen3.5-plus
+  model: deepseek-v4-flash
   runtime: qwenpaw
   skills: [knowledge-grounding, evidence-handoff]
   mcpServers:
@@ -51,7 +51,7 @@ kind: Worker
 metadata:
   name: sales-conversation-worker
 spec:
-  model: qwen3.5-plus
+  model: deepseek-v4-flash
   runtime: qwenpaw
   skills: [reply-drafting, team-lead-coordination, evidence-handoff]
   mcpServers:
@@ -67,7 +67,7 @@ kind: Worker
 metadata:
   name: sales-safety-worker
 spec:
-  model: qwen3.5-plus
+  model: deepseek-v4-flash
   runtime: qwenpaw
   skills: [safety-review, evidence-handoff]
   mcpServers:
@@ -83,7 +83,7 @@ kind: Worker
 metadata:
   name: sales-memory-worker
 spec:
-  model: qwen3.5-plus
+  model: deepseek-v4-flash
   runtime: qwenpaw
   skills: [memory-update, evidence-handoff]
   mcpServers:
@@ -121,8 +121,8 @@ kind: Manager
 metadata:
   name: default
 spec:
-  model: qwen3.5-plus
-  runtime: qwenpaw
+  model: deepseek-v4-flash
+  runtime: openclaw
   mcpServers:
     - name: sales-evaluation-insights
       url: http://host.docker.internal:18082/mcp

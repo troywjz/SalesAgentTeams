@@ -56,10 +56,13 @@ docker compose -f deployment/docker-compose.mcp.yml up --build
 .\.venv\Scripts\python.exe agentteams\build_worker_packages.py
 ```
 
-然后安装官方 AgentTeams 并应用：
+然后安装官方 AgentTeams 并应用。`agt` 是 AgentTeams Controller 提供的 CLI，不需要写入 Python `requirements.txt`；Docker 安装模式通过 Controller 容器调用：
 
 ```powershell
-agt apply -f deployment/agentteams/sales-agent-teams.yaml
+docker cp deployment/agentteams/sales-agent-teams.yaml agentteams-controller:/tmp/sales-agent-teams.yaml
+docker cp agentteams/worker-packages/. agentteams-controller:/tmp/sales-agent-worker-packages/
+docker exec agentteams-controller sh -c "sed -i 's#file://./agentteams/worker-packages/#file:///tmp/sales-agent-worker-packages/#g' /tmp/sales-agent-teams.yaml"
+docker exec agentteams-controller agt apply -f /tmp/sales-agent-teams.yaml
 ```
 
 应用前需要准备 AgentTeams 的 LLM 配置、Docker Desktop 和两个 HTTP MCP 服务。详细映射见 `docs/ARCHITECTURE.md`。
