@@ -37,6 +37,8 @@ def test_lifecycle_configuration_and_secret_boundaries() -> None:
     assert ".env\n" in dockerignore
     assert ".runtime\n" in dockerignore
     assert "evaluation/private_datasets\n" in dockerignore
+    assert "data/*\n" in dockerignore
+    assert "!data/knowledge/faq.example.csv\n" in dockerignore
 
     stop_script = (ROOT / "scripts" / "stop_all.ps1").read_text(
         encoding="utf-8-sig"
