@@ -18,6 +18,7 @@ def test_public_lifecycle_entrypoints_exist() -> None:
         "scripts/setup_project.ps1",
         "scripts/start_all.ps1",
         "scripts/stop_all.ps1",
+        "scripts/check_runtime_config.py",
     ):
         assert (ROOT / relative_path).is_file(), relative_path
 
@@ -25,6 +26,10 @@ def test_public_lifecycle_entrypoints_exist() -> None:
 def test_lifecycle_configuration_and_secret_boundaries() -> None:
     env_example = (ROOT / ".env.example").read_text(encoding="utf-8")
     for key in (
+        "APP_ENV=showcase",
+        "DEMO_MODE=false",
+        "LLM_PROVIDER=deepseek",
+        "DEEPSEEK_MODEL=deepseek-v4-flash",
         "AGENTTEAMS_ENABLED=true",
         "AGENTTEAMS_LLM_PROVIDER=",
         "AGENTTEAMS_OPENAI_BASE_URL=",
@@ -32,6 +37,10 @@ def test_lifecycle_configuration_and_secret_boundaries() -> None:
         "AGENTTEAMS_LLM_API_KEY=",
     ):
         assert key in env_example
+
+    assert "scripts\\check_runtime_config.py" in (
+        ROOT / "scripts" / "start_all.ps1"
+    ).read_text(encoding="utf-8-sig")
 
     dockerignore = (ROOT / ".dockerignore").read_text(encoding="utf-8")
     assert ".env\n" in dockerignore
@@ -48,6 +57,12 @@ def test_lifecycle_configuration_and_secret_boundaries() -> None:
     assert "sales_agent-sales-agent" not in stop_script
     assert "sales_agent-postgres" not in stop_script
     assert "sales_agent-redis" not in stop_script
+
+    worker_start_script = (ROOT / "scripts" / "start_agentteams_workers.ps1").read_text(
+        encoding="utf-8-sig"
+    )
+    assert "Test-WorkerStable" in worker_start_script
+    assert "$workerStartAttempts = 2" in worker_start_script
 
 
 def test_worker_package_build_is_reproducible() -> None:

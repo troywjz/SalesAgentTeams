@@ -80,7 +80,7 @@ function Install-AgentTeams([hashtable]$Config, [string]$ApiKey) {
     }
 
     $agentTeamsModel = Get-EnvValue -Values $Config -Name "AGENTTEAMS_DEFAULT_MODEL" -Default (
-        Get-EnvValue -Values $Config -Name "DEEPSEEK_MODEL" -Default "deepseek-chat"
+        Get-EnvValue -Values $Config -Name "DEEPSEEK_MODEL" -Default "deepseek-v4-flash"
     )
     $adminPassword = Get-EnvValue -Values $Config -Name "AGENTTEAMS_ADMIN_PASSWORD" -Default (
         Get-EnvValue -Values $Config -Name "ADMIN_PASSWORD" -Default "admin123"
@@ -139,8 +139,16 @@ if (-not (Test-PythonEnvironmentCurrent)) {
 }
 
 $config = Read-DotEnv -Path $envFile
-$agentTeamsEnabled = ConvertTo-Bool -Value (Get-EnvValue -Values $config -Name "AGENTTEAMS_ENABLED" -Default "true") -Default $true
-if ($SkipAgentTeams) { $agentTeamsEnabled = $false }
+Write-Host "[配置] 检查 Web、AgentTeams、数据库与 API Key ..." -ForegroundColor Cyan
+$configuredAgentTeamsEnabled = ConvertTo-Bool -Value (Get-EnvValue -Values $config -Name "AGENTTEAMS_ENABLED" -Default "true") -Default $true
+$effectiveSkipAgentTeams = $SkipAgentTeams -or -not $configuredAgentTeamsEnabled
+$preflightArguments = @("-X", "utf8", "scripts\check_runtime_config.py", "--env-file", $envFile)
+if ($effectiveSkipAgentTeams) { $preflightArguments += "--skip-agentteams" }
+& $venvPython @preflightArguments
+if ($LASTEXITCODE -ne 0) {
+    throw "启动配置不完整。请按上方提示修改 .env 后重试。"
+}
+$agentTeamsEnabled = -not $effectiveSkipAgentTeams
 $agentTeamsKey = ""
 if ($agentTeamsEnabled) {
     $agentTeamsKey = Get-AgentTeamsApiKey -Config $config
@@ -223,7 +231,7 @@ if ($agentTeamsEnabled) {
 
     Write-Host "[7/7] 应用六 Worker 清单并执行双层健康检查 ..." -ForegroundColor Cyan
     $agentTeamsModel = Get-EnvValue -Values $config -Name "AGENTTEAMS_DEFAULT_MODEL" -Default (
-        Get-EnvValue -Values $config -Name "DEEPSEEK_MODEL" -Default "deepseek-chat"
+        Get-EnvValue -Values $config -Name "DEEPSEEK_MODEL" -Default "deepseek-v4-flash"
     )
     $manifestSource = Join-Path $projectRoot "deployment\agentteams\sales-agent-teams.yaml"
     $manifestRuntime = Join-Path $runtimeRoot "sales-agent-teams.runtime.yaml"

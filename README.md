@@ -2,7 +2,7 @@
 
 面向 GOAI Agent Infra 赛道的办公技能培训销售多智能体系统。六个业务 Agent 一一映射为六个 AgentTeams Worker；LangGraph 保留为业务流程内核，AgentTeams 负责团队协作，Skill 固化能力边界，MCP 提供角色受限工具和离线评估可视化。
 
-默认配置可直接演示且不会调用外部 LLM：Web 使用 `18100`，独立 PostgreSQL 使用 `15432/sales_agent_demo`，不会访问原销售项目的 `8000` 或会计业务数据库。
+公开配置默认使用真实模型正式展示：Web 使用 `18100`，独立 PostgreSQL 使用 `15432/sales_agent_demo`，不会访问原销售项目的 `8000` 或会计业务数据库。复制 `.env.example` 后只需填写 `DEEPSEEK_API_KEY`，Web 与 AgentTeams 会复用同一个密钥；零 API 测试由独立验证脚本强制切换到本地模型。
 
 ## 新电脑首次准备
 
@@ -23,9 +23,12 @@
 
 然后填写 `.env`：
 
-- Web 使用真实模型时，设置 `DEMO_MODE=false`、`LLM_PROVIDER` 及对应供应商的 API Key/模型；保持 `DEMO_MODE=true` 则 Web 使用零 API 的本地模型。
-- AgentTeams 默认启用，填写 `AGENTTEAMS_LLM_API_KEY`；若其 Base URL 对应 DeepSeek、阿里云或 SiliconFlow，也可以留空并复用对应供应商的 Key。
+- 推荐配置只需填写 `DEEPSEEK_API_KEY`。模板已预填 `DEMO_MODE=false`、`LLM_PROVIDER=deepseek`、当前官方 `deepseek-v4-flash` 模型名和接口地址。
+- AgentTeams 默认启用，`AGENTTEAMS_LLM_API_KEY` 留空即可复用 `DEEPSEEK_API_KEY`；只有使用不同供应商时才需要单独填写。
+- MiniMax、阿里云和 SiliconFlow 的接口及默认模型已预填；需要切换时填写相应 API Key 并修改 `LLM_PROVIDER`。默认无备用供应商、单请求只尝试一次，不会因失败自动多次扣费。
 - 暂时只展示 Web、数据库和 MCP 时，可设置 `AGENTTEAMS_ENABLED=false`。
+
+`DEMO_SEED_DATA=true` 仅幂等导入仓库内公开的办公技能培训样例和展示看板，不决定模型模式，也不会连接或修改原会计培训数据库。`SALES_RAG_ENABLED=false` 与 `SAFETY_VECTOR_ENABLED=false` 可避免启动时产生额外 Embedding 调用；普通 FAQ/SOP/SKU 知识检索仍正常工作。
 
 ## 一键启动与关停
 
@@ -72,7 +75,7 @@
 
 该脚本会依次执行全量测试、确定性团队试运行、GOAI 就绪检查、开源审计和 Git 空白字符检查，并在任一步失败时立即返回非零结果。
 
-`DEMO_MODE=true` 和 `LLM_PROVIDER=demo` 会强制使用确定性本地模型。需要接入真实模型时，显式关闭 Demo 模式并在本地 `.env` 配置供应商；默认单次请求最多尝试 1 个供应商、推理预留为 0，六 Agent 的输出 token 上限也已按结构化结果收紧。
+验证脚本会用进程级环境变量强制 `DEMO_MODE=true` 和 `LLM_PROVIDER=demo`，因此即使本机 `.env` 为正式展示配置，也不会调用真实 LLM。正式服务默认单次请求最多尝试 1 个供应商、推理预留为 0，六 Agent 的输出 token 上限也已按结构化结果收紧。
 
 ## MCP 与 AgentTeams
 

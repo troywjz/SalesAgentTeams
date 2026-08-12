@@ -14,7 +14,8 @@ $env:PYTHONIOENCODING = "utf-8"
 # Force the deterministic local model so validation cannot call a real LLM API.
 $env:DEMO_MODE = "true"
 $env:LLM_PROVIDER = "demo"
-$env:LLM_FALLBACK_PROVIDER = ""
+$env:LLM_PROVIDER_FALLBACK = ""
+$env:AGENTTEAMS_ENABLED = "false"
 
 function Invoke-Checked([string]$Label, [scriptblock]$Command) {
     Write-Host "--- $Label ---" -ForegroundColor Cyan
