@@ -173,16 +173,16 @@ class KnowledgeLoader:
                 "description": "销售阶段和推进动作。",
                 "use_when": "判断销售阶段、追问方向或推进策略时使用。",
                 "do_not_use_when": "不用于风控审核。",
-                "query_hints": ["开场", "探需", "异议", "报名"],
+                "query_hints": ["开场", "探需", "异议", "购买"],
             },
             {
                 "knowledge_key": "faq",
                 "table_name": "knowledge_faq",
                 "display_name": "FAQ 问答库",
                 "description": "常见业务问题、流程说明和政策解释。",
-                "use_when": "客户询问考试、报名、证书、流程、发票、退款等知识时使用。",
+                "use_when": "客户询问课程内容、学习方式、数据安全、流程、发票、退款等知识时使用。",
                 "do_not_use_when": "不用于风控审核。",
-                "query_hints": ["报名", "证书", "考试", "流程", "退款", "发票"],
+                "query_hints": ["Excel", "Word", "PPT", "AI办公", "流程", "退款", "发票"],
             },
         ]
 
@@ -433,10 +433,15 @@ def _needs_sku(message: str, intent_text: str) -> bool:
 def _needs_faq(message: str, intent_text: str) -> bool:
     keywords = (
         "报名",
-        "证书",
-        "考试",
-        "考证",
-        "怎么考",
+        "excel",
+        "word",
+        "ppt",
+        "ai办公",
+        "表格",
+        "文档",
+        "汇报",
+        "数据安全",
+        "脱敏",
         "流程",
         "退款",
         "发票",
@@ -444,7 +449,6 @@ def _needs_faq(message: str, intent_text: str) -> bool:
         "交付",
         "时间",
         "条件",
-        "资格",
         "零基础",
     )
     return any(keyword in message or keyword in intent_text for keyword in keywords)

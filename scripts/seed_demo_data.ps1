@@ -1,4 +1,4 @@
-$ErrorActionPreference = "Stop"
+﻿$ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $OutputEncoding = [System.Text.UTF8Encoding]::new()
 
@@ -9,4 +9,4 @@ if (-not (Test-Path -LiteralPath $venvPython)) {
     throw "The demo environment is not initialized. Run .\scripts\setup_demo.ps1 first."
 }
 
-& $venvPython -m app.demo_data
+& $venvPython -X utf8 -m app.demo_data --reset

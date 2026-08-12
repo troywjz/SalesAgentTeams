@@ -13,19 +13,29 @@ $workerNames = @(
     "agentteams-worker-sales-memory-worker"
 )
 $workerTimeoutSeconds = 60
-$probeCode = "import urllib.request; print(urllib.request.urlopen('http://127.0.0.1:8088/api/version', timeout=5).status)"
 
 function Get-WorkerState([string]$Name) {
-    $state = & docker inspect $Name --format "{{.State.Status}}" 2>$null
+    $state = & cmd.exe /d /c "docker inspect $Name --format {{.State.Status}} 2>nul"
     if ($LASTEXITCODE -ne 0) {
-        throw "找不到 Worker 容器：$Name。请先执行 agt apply。"
+        return "missing"
     }
     return ($state | Select-Object -First 1).Trim()
 }
 
 function Test-QwenPawApi([string]$Name) {
-    & docker exec $Name /opt/venv/qwenpaw/bin/python -c $probeCode 2>$null | Out-Null
+    & docker exec $Name sh -lc "curl -fsS http://127.0.0.1:8088/api/version >/dev/null 2>&1"
     return ($LASTEXITCODE -eq 0)
+}
+
+function Wait-WorkerContainer([string]$Name, [int]$TimeoutSeconds = 60) {
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        if ((Get-WorkerState $Name) -ne "missing") {
+            return $true
+        }
+        Start-Sleep -Seconds 2
+    }
+    return $false
 }
 
 function Wait-WorkerReady([string]$Name, [int]$TimeoutSeconds = 60) {
@@ -45,6 +55,13 @@ function Wait-WorkerReady([string]$Name, [int]$TimeoutSeconds = 60) {
 
 foreach ($workerName in $workerNames) {
     $state = Get-WorkerState $workerName
+    if ($state -eq "missing") {
+        Write-Host "等待 AgentTeams 创建 $workerName ..."
+        if (-not (Wait-WorkerContainer $workerName $workerTimeoutSeconds)) {
+            throw "找不到 Worker 容器：$workerName。请确认 agt apply 已成功。"
+        }
+        $state = Get-WorkerState $workerName
+    }
     if ($state -ne "running") {
         Write-Host "启动 $workerName ..."
         & docker start $workerName | Out-Host

@@ -9,5 +9,8 @@ trim_trailing_whitespace = true
 [*.{ps1,bat,cmd}]
 end_of_line = crlf
 
+[*.ps1]
+charset = utf-8-bom
+
 [*.csv]
 charset = utf-8-bom

@@ -15,11 +15,11 @@ HIGH_INTENT = {"intent_category": "high_intent", "purchase_intent": "high", "emo
 @pytest.mark.parametrize(
     ("purchase_intent", "expected"),
     [
-        ("已报名（四证班，已交100元定金，进VIP学习打卡群）", True),
+        ("已报名（办公效率综合训练营，已交100元定金）", True),
         ("已报名缴费，课程已开通（300元内部价）", True),
         ("已购买高级办公技能认证课程", True),
         ("已进班学习", True),
-        ("已交费报名办公技能初级，学习进行中", True),
+        ("已交费报名 Excel 报表专项，学习进行中", True),
         ("确定报400元班级，准备进班", False),
         ("考虑中，未决定", False),
         ("报名推进中", False),
@@ -44,7 +44,7 @@ def test_has_new_purchase_signal_detects_buying_language() -> None:
 
 
 def test_enrolled_customer_follow_up_does_not_handover() -> None:
-    profile = {"purchase_intent": "已报名（四证班，已交100元定金）"}
+    profile = {"purchase_intent": "已报名（办公效率综合训练营，已交100元定金）"}
     assert intent_handover_reasons(
         HIGH_INTENT, message="回头补可以补？晚上没时间", profile=profile
     ) == []
@@ -54,7 +54,7 @@ def test_enrolled_customer_follow_up_does_not_handover() -> None:
 
 
 def test_enrolled_customer_with_new_purchase_signal_still_handovers() -> None:
-    profile = {"purchase_intent": "已报名（四证班，已交100元定金）"}
+    profile = {"purchase_intent": "已报名（办公效率综合训练营，已交100元定金）"}
     assert intent_handover_reasons(
         HIGH_INTENT, message="再报一科，付款链接发我", profile=profile
     ) == ["意图类别=high_intent", "购买意向=high"]

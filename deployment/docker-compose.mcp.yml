@@ -1,5 +1,8 @@
+name: salesagentteams-mcp
+
 services:
   sales-agent-bridge-mcp:
+    container_name: sales-agent-teams-bridge-mcp
     build:
       context: ..
       dockerfile: deployment/Dockerfile.mcp
@@ -9,10 +12,13 @@ services:
     environment:
       MCP_HOST: 0.0.0.0
       MCP_PORT: 8000
+      DATABASE_URL: postgresql+psycopg://sales_agent:change-me@host.docker.internal:15432/sales_agent_demo
     ports:
       - "18081:8000"
+    restart: unless-stopped
 
   sales-evaluation-insights-mcp:
+    container_name: sales-agent-teams-evaluation-mcp
     build:
       context: ..
       dockerfile: deployment/Dockerfile.mcp
@@ -22,5 +28,7 @@ services:
     environment:
       MCP_HOST: 0.0.0.0
       MCP_PORT: 8000
+      DATABASE_URL: postgresql+psycopg://sales_agent:change-me@host.docker.internal:15432/sales_agent_demo
     ports:
       - "18082:8000"
+    restart: unless-stopped

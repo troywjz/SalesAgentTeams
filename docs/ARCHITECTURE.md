@@ -2,7 +2,7 @@
 
 ## 定位
 
-SalesAgentTeams 是一个企业销售多智能体协同 Demo。原有 LangGraph 负责销售状态、路由、并行节点、风控和落库逻辑；AgentTeams 负责 Worker 生命周期、跨 Agent 协作、可见交接和容器化运行。
+SalesAgentTeams 是一个办公技能培训销售多智能体协同 Demo。原有 LangGraph 负责销售状态、路由、并行节点、风控和落库逻辑；AgentTeams 负责 Worker 生命周期、跨 Agent 协作、可见交接和容器化运行。
 
 AgentTeams 不替换 LangGraph。`sales_agent_teams.bridge` 是两者之间的适配层，保证原项目 Agent 可以被六个 Worker 复用。
 
@@ -35,3 +35,10 @@ AgentTeams 不替换 LangGraph。`sales_agent_teams.bridge` 是两者之间的�
 1. 本地模式：不依赖 AgentTeams 或 Docker，使用 `DemoLLMClient` 运行六 Worker 兼容链路。
 2. MCP 模式：使用 Docker Compose 启动两个 MCP 服务。
 3. AgentTeams 模式：安装官方 AgentTeams，构建 Worker zip 包，应用 `deployment/agentteams/sales-agent-teams.yaml`。
+
+## 数据与成本边界
+
+- 比赛 Web 固定使用 `18100`，独立 PostgreSQL 固定使用 `15432/sales_agent_demo`；运行时数据库护栏会拒绝任何其他数据库名。
+- 原销售项目的会计数据、会话历史、`8000` Web 和 `5432` PostgreSQL 不在比赛项目写入范围内。
+- 默认 `DEMO_MODE=true` 且供应商为 `demo`，不调用真实 LLM；显式启用真实模型时单请求默认只尝试一个供应商。
+- Supervisor 对强制转人工和简单寒暄走确定性路由；完整链路再调用所需 Agent，减少无效 token。

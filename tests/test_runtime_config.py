@@ -11,11 +11,14 @@ def test_windows_demo_defaults_to_postgresql() -> None:
     assert settings.database_url.startswith("postgresql+psycopg://")
     assert "sales_agent_demo" in settings.database_url
     assert settings.demo_seed_data is True
-    assert settings.demo_mode is False
-    assert settings.llm_provider == "minimax"
+    assert settings.demo_mode is True
+    assert settings.llm_provider == "demo"
+    assert settings.llm_provider_fallback == ""
+    assert settings.app_port == 18100
     assert settings.database_connect_timeout_seconds == 5
     assert settings.evaluation_max_concurrency == 3
-    assert settings.llm_reasoning_budget_tokens == 4096
+    assert settings.llm_max_attempts_per_request == 1
+    assert settings.llm_reasoning_budget_tokens == 0
     assert settings.llm_timeout_seconds == 90.0
     assert settings.chat_request_timeout_seconds == 300.0
 
@@ -62,7 +65,6 @@ def test_demo_seed_rejects_non_demo_database() -> None:
     settings = Settings(
         _env_file=None,
         DATABASE_URL="postgresql+psycopg://user:pass@127.0.0.1:5432/sales_agent",
-        DEMO_ALLOW_UNSAFE_SEED=False,
     )
 
     with pytest.raises(RuntimeError, match="非 Demo 数据库"):

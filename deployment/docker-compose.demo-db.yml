@@ -1,0 +1,25 @@
+name: salesagentteams-demo
+
+services:
+  demo-postgres:
+    image: postgres:16-alpine
+    container_name: sales-agent-teams-demo-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sales_agent_demo
+      POSTGRES_USER: sales_agent
+      POSTGRES_PASSWORD: change-me
+      TZ: Asia/Shanghai
+    ports:
+      - "15432:5432"
+    volumes:
+      - sales_agent_teams_demo_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sales_agent -d sales_agent_demo"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+volumes:
+  sales_agent_teams_demo_postgres:
+    name: sales-agent-teams-demo-postgres-data
