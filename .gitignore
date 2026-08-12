@@ -29,6 +29,7 @@ data/safety_rules/*.csv
 data/safety_rules/**/*.csv
 *baiduyun*
 logs/
+.runtime/
 
 # 清洗后的私有评估数据和逐轮日志只保留在本机
 evaluation/*.csv

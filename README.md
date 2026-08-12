@@ -4,17 +4,46 @@
 
 默认配置可直接演示且不会调用外部 LLM：Web 使用 `18100`，独立 PostgreSQL 使用 `15432/sales_agent_demo`，不会访问原销售项目的 `8000` 或会计业务数据库。
 
-## 三分钟启动
+## 新电脑首次准备
 
-要求：Windows 10/11、Python 3.11+、Docker Desktop、UTF-8 终端。
+支持 Windows 10/11。首次拉取或复制项目后，双击 `setup.cmd`，或在 PowerShell 中运行：
 
 ```powershell
-docker compose -f deployment/docker-compose.demo-db.yml up -d
-Copy-Item .env.example .env
-.\scripts\setup_demo.ps1
-.\scripts\seed_demo_data.ps1
-.\start_demo.cmd
+.\setup.cmd
 ```
+
+准备脚本会：
+
+- 检查 Python 3.11+、Docker Desktop 和 Docker Compose；缺少 Python 或 Docker Desktop 时优先通过 `winget` 安装。
+- 创建 `.venv`，安装并执行 `pip check` 校验 `requirements.txt` 中的全部 Python 依赖。
+- 自动创建缺失的 `.env`（也可手动复制 `.env.example`），不会覆盖已有配置。
+- 构建六个 Worker 包、拉取 PostgreSQL 镜像并构建两个 MCP 镜像。
+
+系统组件首次安装后如果 Windows 提示启用 WSL 2、虚拟化或重启，应完成提示后再次运行 `setup.cmd`。AgentTeams 控制面需要模型密钥，因此在第一次完整启动时由脚本通过固定提交与 SHA-256 校验后的官方安装器创建；其镜像也固定为本项目已经通过验收的 digest，避免 `latest` 漂移。
+
+然后填写 `.env`：
+
+- Web 使用真实模型时，设置 `DEMO_MODE=false`、`LLM_PROVIDER` 及对应供应商的 API Key/模型；保持 `DEMO_MODE=true` 则 Web 使用零 API 的本地模型。
+- AgentTeams 默认启用，填写 `AGENTTEAMS_LLM_API_KEY`；若其 Base URL 对应 DeepSeek、阿里云或 SiliconFlow，也可以留空并复用对应供应商的 Key。
+- 暂时只展示 Web、数据库和 MCP 时，可设置 `AGENTTEAMS_ENABLED=false`。
+
+## 一键启动与关停
+
+完整启动：
+
+```powershell
+.\start_all.cmd
+```
+
+脚本会幂等检查并启动 Docker Desktop、独立 Demo PostgreSQL、数据库表、后台 Web/API、两个 MCP、Worker 包服务、AgentTeams Controller/Manager 和六个 Worker，并逐层执行健康检查。重复运行不会重复创建进程或清空数据。
+
+完整关停：
+
+```powershell
+.\stop_all.cmd
+```
+
+关停脚本只停止 `SalesAgentTeams` 的宿主机进程和容器，保留 PostgreSQL/AgentTeams 数据卷，不会停止或删除原项目 `sales_agent`。`start_demo.cmd`、`scripts/setup_demo.ps1` 和 `scripts/start_demo.ps1` 作为旧入口继续可用。
 
 页面入口：
 
@@ -47,7 +76,7 @@ Copy-Item .env.example .env
 
 ## MCP 与 AgentTeams
 
-启动两个 HTTP MCP：
+一键启动已经包含两个 HTTP MCP：
 
 ```powershell
 docker compose -f deployment/docker-compose.mcp.yml up --build -d
@@ -56,7 +85,7 @@ docker compose -f deployment/docker-compose.mcp.yml up --build -d
 - 销售 Agent Bridge MCP：`http://127.0.0.1:18081/mcp`
 - Evaluation Insights MCP：`http://127.0.0.1:18082/mcp`
 
-构建并应用 Worker 包：
+一键启动也会构建、托管并应用 Worker 包。以下命令仅用于单独调试：
 
 ```powershell
 .\.venv\Scripts\python.exe agentteams\build_worker_packages.py
@@ -66,7 +95,7 @@ docker exec agentteams-controller agt apply -f /tmp/sales-agent-teams.yaml
 .\scripts\start_agentteams_workers.ps1
 ```
 
-`agt` 是 AgentTeams Controller 内的 CLI，不属于 Python 包，因此不写入 `requirements.txt`。AgentTeams Worker 的平台模型配置与 Web Demo 的本地确定性模型是两个独立运行层；无 API 测试不会向 Manager 发送真实模型任务。
+`agt` 是 AgentTeams Controller 内的 CLI，不属于 Python 包，因此不写入 `requirements.txt`。AgentTeams Worker 的平台模型配置与 Web Demo 的本地确定性模型是两个独立运行层；`AGENTTEAMS_ENABLED=false` 或零 API 验证不会向 Manager 发送真实模型任务。
 
 ## 评估边界
 

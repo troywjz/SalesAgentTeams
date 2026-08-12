@@ -65,9 +65,15 @@ foreach ($workerName in $workerNames) {
     if ($state -ne "running") {
         Write-Host "启动 $workerName ..."
         & docker start $workerName | Out-Host
+        if ($LASTEXITCODE -ne 0) {
+            throw "启动 $workerName 失败，退出码：$LASTEXITCODE"
+        }
     } elseif (-not (Test-QwenPawApi $workerName)) {
         Write-Host "重启失去 QwenPaw API 的 $workerName ..."
         & docker restart $workerName | Out-Host
+        if ($LASTEXITCODE -ne 0) {
+            throw "重启 $workerName 失败，退出码：$LASTEXITCODE"
+        }
     } else {
         Write-Host "$workerName 已运行，QwenPaw API 正常。"
         continue
