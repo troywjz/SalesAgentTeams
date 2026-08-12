@@ -100,16 +100,23 @@ def validate_code_and_public_data() -> list[str]:
     violations: list[str] = []
     env_text = (ROOT / ".env.example").read_text(encoding="utf-8")
     required_defaults = (
+        "APP_ENV=showcase",
         "APP_PORT=18100",
-        "DEMO_MODE=true",
-        "LLM_PROVIDER=demo",
+        "DEMO_MODE=false",
+        "LLM_PROVIDER=deepseek",
+        "DEEPSEEK_API_KEY=",
+        "DEEPSEEK_MODEL=deepseek-v4-flash",
+        "AGENTTEAMS_DEFAULT_MODEL=deepseek-v4-flash",
         "LLM_MAX_ATTEMPTS_PER_REQUEST=1",
         "LLM_REASONING_BUDGET_TOKENS=0",
         "sales_agent_demo",
     )
     for expected in required_defaults:
         if expected not in env_text:
-            violations.append(f"缺少安全默认配置: {expected}")
+            violations.append(f"缺少正式展示默认配置: {expected}")
+
+    if not (ROOT / "scripts" / "check_runtime_config.py").is_file():
+        violations.append("缺少正式展示启动配置检查脚本")
 
     db_guard = (ROOT / "app" / "db" / "session.py").read_text(encoding="utf-8")
     if 'database_name != "sales_agent_demo"' not in db_guard:
@@ -154,7 +161,7 @@ def main() -> None:
     print(
         "GOAI 就绪检查通过："
         f"{len(skill_files())} 个 Skill、6 个 Worker、2 个 MCP 服务、"
-        "安全 Demo 默认配置和初赛材料均已验证。"
+        "正式展示配置门禁和初赛材料均已验证。"
     )
 
 

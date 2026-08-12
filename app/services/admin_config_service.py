@@ -26,15 +26,15 @@ class AdminConfigItem:
 
 # 只允许修改不会暴露密钥、数据库连接串或认证根密钥的配置。
 CONFIG_ITEMS = [
-    AdminConfigItem("DEMO_MODE", "强制 Demo 模型", "运行时配置", "bool", "true", "开启后跳过真实模型，始终使用本地 Demo 模型；比赛展示建议保持开启。"),
+    AdminConfigItem("DEMO_MODE", "零 API 验证模式", "运行时配置", "bool", "false", "正式展示保持关闭；仅在测试或无密钥体验时开启本地确定性模型。"),
     AdminConfigItem("APP_RELOAD", "开发自动重载", "运行时配置", "bool", "false", "开发调试时是否启用 Uvicorn 自动重载。"),
-    AdminConfigItem("LLM_PROVIDER", "主模型供应商", "模型配置", "string", "demo", "比赛演示默认使用本地 demo；接入真实模型时再选择供应商。"),
+    AdminConfigItem("LLM_PROVIDER", "主模型供应商", "模型配置", "string", "deepseek", "正式展示默认使用 DeepSeek；修改后需确保对应 API Key 已写入本机 .env。"),
     AdminConfigItem("LLM_PROVIDER_FALLBACK", "模型兜底顺序", "模型配置", "string", "", "逗号分隔的备用真实模型供应商；留空可避免额外调用。"),
-    AdminConfigItem("MINIMAX_MODEL", "MiniMax 模型", "模型配置", "string", "", "MiniMax 供应商使用的模型名。"),
-    AdminConfigItem("DEEPSEEK_MODEL", "DeepSeek 模型", "模型配置", "string", "", "DeepSeek 供应商使用的模型名。"),
-    AdminConfigItem("ALIYUN_MODEL", "阿里云模型", "模型配置", "string", "", "阿里云兼容接口使用的模型名。"),
-    AdminConfigItem("SILICONFLOW_MODEL", "SiliconFlow 模型", "模型配置", "string", "", "SiliconFlow 使用的模型名。"),
-    AdminConfigItem("CHAT_REQUEST_TIMEOUT_SECONDS", "会话请求超时", "回复配置", "float", "180", "客户消息自动回复的最长等待秒数。"),
+    AdminConfigItem("MINIMAX_MODEL", "MiniMax 模型", "模型配置", "string", "MiniMax-M2.7", "MiniMax 供应商使用的模型名。"),
+    AdminConfigItem("DEEPSEEK_MODEL", "DeepSeek 模型", "模型配置", "string", "deepseek-v4-flash", "DeepSeek 供应商使用的模型名。"),
+    AdminConfigItem("ALIYUN_MODEL", "阿里云模型", "模型配置", "string", "qwen-plus", "阿里云兼容接口使用的模型名。"),
+    AdminConfigItem("SILICONFLOW_MODEL", "SiliconFlow 模型", "模型配置", "string", "deepseek-ai/DeepSeek-V4-Flash", "SiliconFlow 使用的模型名。"),
+    AdminConfigItem("CHAT_REQUEST_TIMEOUT_SECONDS", "会话请求超时", "回复配置", "float", "300", "客户消息自动回复的最长等待秒数。"),
     AdminConfigItem("AI_REPLY_CHUNK_DELAY_SECONDS", "分段发送间隔", "回复配置", "float", "0.2", "拟人化分段发送时每段之间的等待秒数。"),
     AdminConfigItem("AI_REPLY_CHUNK_MAX_CHARS", "分段最大字数", "回复配置", "int", "45", "单段自动回复的最大字符数。"),
     AdminConfigItem("SAFETY_VECTOR_ENABLED", "风控向量审核", "风控配置", "bool", "false", "仅当风控规则有向量数据时启用向量审核。"),

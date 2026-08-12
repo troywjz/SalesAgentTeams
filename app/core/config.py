@@ -8,10 +8,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 class Settings(BaseSettings):
-    app_name: str = Field(default="SalesAgentTeams 办公技能培训 Demo", alias="APP_NAME")
-    app_env: str = Field(default="demo", alias="APP_ENV")
-    # 比赛开源版默认使用确定性本地模型，避免试运行误调用真实 API。
-    # 只有演示者显式关闭 DEMO_MODE 并配置供应商密钥后才启用真实模型。
+    app_name: str = Field(default="SalesAgentTeams 办公技能培训销售智能体", alias="APP_NAME")
+    app_env: str = Field(default="showcase", alias="APP_ENV")
+    # 没有 .env 时保留确定性本地模型作为代码级安全兜底；公开 .env.example
+    # 则采用真实模型展示配置，并由启动前检查阻止密钥缺失时静默降级。
     demo_mode: bool = Field(default=True, alias="DEMO_MODE")
     demo_agent_delay_ms: int = Field(default=60, alias="DEMO_AGENT_DELAY_MS")
     demo_seed_data: bool = Field(default=True, alias="DEMO_SEED_DATA")
@@ -160,7 +160,7 @@ class Settings(BaseSettings):
         alias="MINIMAX_API_URL",
     )
     minimax_api_key: str | None = Field(default=None, alias="MINIMAX_API_KEY")
-    minimax_model: str | None = Field(default=None, alias="MINIMAX_MODEL")
+    minimax_model: str | None = Field(default="MiniMax-M2.7", alias="MINIMAX_MODEL")
     minimax_models: str | None = Field(default=None, alias="MINIMAX_MODELS")
 
     xiaomimimo_api_url: str | None = Field(
@@ -179,7 +179,7 @@ class Settings(BaseSettings):
         alias="ALIYUN_API_URL",
     )
     aliyun_api_key: str | None = Field(default=None, alias="ALIYUN_API_KEY")
-    aliyun_model: str | None = Field(default=None, alias="ALIYUN_MODEL")
+    aliyun_model: str | None = Field(default="qwen-plus", alias="ALIYUN_MODEL")
     aliyun_models: str | None = Field(default=None, alias="ALIYUN_MODELS")
     aliyun_embedding_api_url: str | None = Field(
         default="https://dashscope.aliyuncs.com/compatible-mode/v1",
@@ -199,7 +199,10 @@ class Settings(BaseSettings):
         alias="SILICONFLOW_API_URL",
     )
     siliconflow_api_key: str | None = Field(default=None, alias="SILICONFLOW_API_KEY")
-    siliconflow_model: str | None = Field(default=None, alias="SILICONFLOW_MODEL")
+    siliconflow_model: str | None = Field(
+        default="deepseek-ai/DeepSeek-V4-Flash",
+        alias="SILICONFLOW_MODEL",
+    )
     siliconflow_models: str | None = Field(default=None, alias="SILICONFLOW_MODELS")
     siliconflow_embedding_api_url: str | None = Field(
         default="https://api.siliconflow.cn/v1",
@@ -235,7 +238,10 @@ class Settings(BaseSettings):
         alias="DEEPSEEK_API_URL",
     )
     deepseek_api_key: str | None = Field(default=None, alias="DEEPSEEK_API_KEY")
-    deepseek_model: str | None = Field(default=None, alias="DEEPSEEK_MODEL")
+    deepseek_model: str | None = Field(
+        default="deepseek-v4-flash",
+        alias="DEEPSEEK_MODEL",
+    )
     deepseek_models: str | None = Field(default=None, alias="DEEPSEEK_MODELS")
 
     chatgpt_api_url: str | None = Field(

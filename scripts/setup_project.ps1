@@ -98,7 +98,7 @@ $requirementsHash | Set-Content -LiteralPath (Join-Path $runtimeRoot "requiremen
 
 if (-not (Test-Path -LiteralPath ".env")) {
     Copy-Item -LiteralPath ".env.example" -Destination ".env"
-    Write-Host "已创建 .env。请填写模型 API Key；该文件不会提交到 Git。" -ForegroundColor Yellow
+    Write-Host "已创建 .env。推荐只填写 DEEPSEEK_API_KEY；Web 与 AgentTeams 会共同复用，该文件不会提交到 Git。" -ForegroundColor Yellow
 } else {
     Write-Host ".env 已存在，保持原内容不变。"
 }
@@ -127,6 +127,6 @@ if (-not $SkipDockerBuild) {
 
 Write-Host ""
 Write-Host "项目依赖准备完成。" -ForegroundColor Green
-Write-Host "1. 检查并填写 .env 中的大模型配置。"
+Write-Host "1. 在 .env 中填写 DEEPSEEK_API_KEY；其他供应商 Key 为可选切换项。"
 Write-Host "2. 运行 .\start_all.cmd 启动完整项目。"
 Write-Host "3. 运行 .\stop_all.cmd 关闭本项目全部服务（保留数据）。"

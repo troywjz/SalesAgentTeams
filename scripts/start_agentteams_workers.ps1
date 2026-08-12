@@ -13,6 +13,8 @@ $workerNames = @(
     "agentteams-worker-sales-memory-worker"
 )
 $workerTimeoutSeconds = 60
+$workerStabilitySeconds = 12
+$workerStartAttempts = 2
 
 function Get-WorkerState([string]$Name) {
     $state = & cmd.exe /d /c "docker inspect $Name --format {{.State.Status}} 2>nul"
@@ -53,38 +55,52 @@ function Wait-WorkerReady([string]$Name, [int]$TimeoutSeconds = 60) {
     return $false
 }
 
-foreach ($workerName in $workerNames) {
-    $state = Get-WorkerState $workerName
-    if ($state -eq "missing") {
-        Write-Host "等待 AgentTeams 创建 $workerName ..."
-        if (-not (Wait-WorkerContainer $workerName $workerTimeoutSeconds)) {
-            throw "找不到 Worker 容器：$workerName。请确认 agt apply 已成功。"
+function Test-WorkerStable([string]$Name, [int]$Seconds = 12) {
+    $deadline = (Get-Date).AddSeconds($Seconds)
+    while ((Get-Date) -lt $deadline) {
+        if ((Get-WorkerState $Name) -ne "running" -or -not (Test-QwenPawApi $Name)) {
+            return $false
         }
-        $state = Get-WorkerState $workerName
+        Start-Sleep -Seconds 2
     }
-    if ($state -ne "running") {
-        Write-Host "启动 $workerName ..."
-        & docker start $workerName | Out-Host
-        if ($LASTEXITCODE -ne 0) {
-            throw "启动 $workerName 失败，退出码：$LASTEXITCODE"
-        }
-    } elseif (-not (Test-QwenPawApi $workerName)) {
-        Write-Host "重启失去 QwenPaw API 的 $workerName ..."
-        & docker restart $workerName | Out-Host
-        if ($LASTEXITCODE -ne 0) {
-            throw "重启 $workerName 失败，退出码：$LASTEXITCODE"
-        }
-    } else {
-        Write-Host "$workerName 已运行，QwenPaw API 正常。"
-        continue
-    }
+    return $true
+}
 
-    if (-not (Wait-WorkerReady $workerName $workerTimeoutSeconds)) {
+foreach ($workerName in $workerNames) {
+    $stable = $false
+    foreach ($attempt in 1..$workerStartAttempts) {
+        $state = Get-WorkerState $workerName
+        if ($state -eq "missing") {
+            Write-Host "等待 AgentTeams 创建 $workerName ..."
+            if (-not (Wait-WorkerContainer $workerName $workerTimeoutSeconds)) {
+                break
+            }
+            $state = Get-WorkerState $workerName
+        }
+        if ($state -ne "running") {
+            Write-Host "启动 $workerName（$attempt/$workerStartAttempts）..."
+            & docker start $workerName | Out-Host
+        } elseif (-not (Test-QwenPawApi $workerName)) {
+            Write-Host "重启失去 QwenPaw API 的 $workerName（$attempt/$workerStartAttempts）..."
+            & docker restart $workerName | Out-Host
+        }
+        if ($LASTEXITCODE -ne 0) {
+            continue
+        }
+        if ((Wait-WorkerReady $workerName $workerTimeoutSeconds) -and (
+            Test-WorkerStable $workerName $workerStabilitySeconds
+        )) {
+            $stable = $true
+            break
+        }
+        Write-Host "$workerName 就绪后未保持稳定，准备重试 ..." -ForegroundColor Yellow
+    }
+    if (-not $stable) {
         Write-Host "--- $workerName 最近日志 ---"
         & docker logs --tail 80 $workerName | Out-Host
-        throw "$workerName 未能在 $workerTimeoutSeconds 秒内就绪。"
+        throw "$workerName 未能通过 Docker + QwenPaw 稳定性检查。"
     }
-    Write-Host "$workerName 已就绪。"
+    Write-Host "$workerName 已通过 $workerStabilitySeconds 秒稳定性检查。"
 }
 
 Write-Host "6 个 AgentTeams Worker 均已通过 Docker + QwenPaw 健康检查。"
