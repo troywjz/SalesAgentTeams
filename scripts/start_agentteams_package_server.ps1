@@ -1,6 +1,7 @@
 ﻿$ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $OutputEncoding = [System.Text.UTF8Encoding]::new()
+. (Join-Path $PSScriptRoot "runtime_helpers.ps1")
 
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $packageRoot = Join-Path $projectRoot "agentteams\worker-packages"
@@ -14,24 +15,26 @@ if (-not (Test-Path -LiteralPath $venvPython)) {
     throw "Project virtual environment not found: $venvPython"
 }
 
-$existing = Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue
-if ($existing) {
+$runtimeRoot = Get-RuntimeRoot -ProjectRoot $projectRoot
+$existingProcess = Get-ManagedProcess `
+    -RuntimeRoot $runtimeRoot `
+    -Name "agentteams-package-server" `
+    -ExpectedExecutable $venvPython
+if ($existingProcess -and (Test-TcpPort -Port $port)) {
     Write-Host "AgentTeams package server already listens on http://127.0.0.1:$port/"
     exit 0
 }
+if (Test-TcpPort -Port $port) {
+    throw "端口 $port 已被未登记进程占用，无法安全启动 Worker 包服务。"
+}
 
-$logRoot = Join-Path $env:TEMP "sales-agent-teams-runtime"
-New-Item -ItemType Directory -Force -Path $logRoot | Out-Null
-$stdoutLog = Join-Path $logRoot "agentteams-package-server.out.log"
-$stderrLog = Join-Path $logRoot "agentteams-package-server.err.log"
-
-$process = Start-Process `
+$process = Start-ManagedProcess `
+    -RuntimeRoot $runtimeRoot `
+    -Name "agentteams-package-server" `
     -FilePath $venvPython `
     -ArgumentList @("-m", "http.server", $port, "--bind", "0.0.0.0", "--directory", $packageRoot) `
-    -WindowStyle Hidden `
-    -RedirectStandardOutput $stdoutLog `
-    -RedirectStandardError $stderrLog `
-    -PassThru
+    -WorkingDirectory $projectRoot
+Wait-TcpPort -Port $port -Label "Worker 包服务" -TimeoutSeconds 15
 
 Write-Host "AgentTeams package server started."
 Write-Host "URL: http://127.0.0.1:$port/"

@@ -41,3 +41,5 @@ docker exec agentteams-controller agt get teams
 Worker 启动脚本会顺序拉起退出的 Worker，并检查容器内 QwenPaw 的 `/api/version`。只看 Docker Desktop 的 `Up` 状态不足以判断 Worker 可用；如果发现容器仍在运行但 API 失效，脚本会重启该 Worker。
 
 Worker 包服务需要在 `agt apply` 以及后续 Worker 重启期间保持运行；它只提供公开 zip 包。Worker 通过 `host.docker.internal` 访问宿主机上的 MCP 服务。共享部署时应改为经 Gateway 暴露的 HTTPS MCP 地址，并把真实凭据留在 Gateway，不写入 Worker 包或 Git。
+
+项目根目录的 `start_all.cmd` 已封装以上过程：如果 Controller 不存在，会从官方仓库固定提交下载安装器、校验 SHA-256，并使用本项目已验证的镜像 digest；如果已经安装，则只启动退出的容器。`stop_all.cmd` 会停止 Controller、Manager 和本项目六个 Worker，但保留 AgentTeams 数据卷。首次安装需要 `.env` 中的 `AGENTTEAMS_LLM_API_KEY` 或可复用的供应商 Key。
