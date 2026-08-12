@@ -94,7 +94,7 @@ class _ReadOnlyKnowledgeSession:
 def test_parse_memory_summary_extracts_history_and_profile() -> None:
     memory = (
         '{"history_summary":"客户已咨询价格",'
-        '"customer_profile":{"age":"30","purchase_intent":"已报名（四证班，已交100元定金）"},'
+        '"customer_profile":{"age":"30","purchase_intent":"已报名（办公效率综合训练营，已交100元定金）"},'
         '"profile_updates":[]}'
     )
 
@@ -102,7 +102,7 @@ def test_parse_memory_summary_extracts_history_and_profile() -> None:
 
     assert history == "客户已咨询价格"
     assert profile.age == "30"
-    assert profile.purchase_intent == "已报名（四证班，已交100元定金）"
+    assert profile.purchase_intent == "已报名（办公效率综合训练营，已交100元定金）"
 
 
 def test_parse_memory_summary_falls_back_to_raw_text_when_not_json() -> None:

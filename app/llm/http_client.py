@@ -78,8 +78,14 @@ class HttpLLMClient:
         budget = self.config.reasoning_budget_tokens or 0
         if max_tokens is not None or budget > 0:
             payload["max_tokens"] = (max_tokens or 1024) + budget
-        # Many OpenAI-compatible gateways do not fully support response_format.
-        # JSON-only behavior is enforced by prompts and validated after response.
+        # DeepSeek V4 默认启用思考模式。业务 Agent 只需要短小的结构化判断，
+        # 因此官方 DeepSeek 直连时关闭思考并启用 JSON Output，既避免推理内容
+        # 耗尽 max_tokens，也减少比赛演示的延迟和 token 消耗。其他兼容网关仍
+        # 仅依赖提示词和响应校验，避免发送它们不支持的供应商私有参数。
+        if self.config.provider == "deepseek":
+            payload["thinking"] = {"type": "disabled"}
+            if response_format == "json":
+                payload["response_format"] = {"type": "json_object"}
 
         headers = {
             "Authorization": f"Bearer {self.config.api_key}",

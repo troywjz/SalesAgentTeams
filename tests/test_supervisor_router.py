@@ -45,8 +45,8 @@ def test_partial_knowledge_insufficiency_can_continue_conversation() -> None:
         {
             "sop": {"should_transfer": False},
             "knowledge_output": {
-                "facts": ["初级会计考试每年一次"],
-                "missing_info": ["报名条件需要人工确认"],
+                "facts": ["Excel 函数与报表专项包含跨表匹配练习"],
+                "missing_info": ["企业交付范围需要人工确认"],
                 "knowledge_sufficiency": "insufficient",
             },
         }
@@ -62,7 +62,7 @@ def test_empty_knowledge_insufficiency_routes_to_handover() -> None:
             "knowledge_output": {
                 "facts": [],
                 "matched_skus": [],
-                "missing_info": ["报名条件需要人工确认"],
+                "missing_info": ["企业交付范围需要人工确认"],
                 "knowledge_sufficiency": "insufficient",
             },
         }

@@ -6,4 +6,4 @@ class ConversationAgent(BaseLLMAgent):
     prompt_file = "conversation_agent.md"
     output_kind = "json"
     temperature = 0.6
-    max_tokens = 1200
+    max_tokens = 800

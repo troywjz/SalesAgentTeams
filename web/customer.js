@@ -11,7 +11,7 @@ const PREVIEW_LIMIT = 34;
 const COMPOSER_MAX_ROWS = 3;
 // 需高于后端 CHAT_REQUEST_TIMEOUT_SECONDS，避免前端先取消导致无回复落库。
 const REQUEST_TIMEOUT_MS = 240000;
-const NETWORK_ERROR_MESSAGE = "无法连接后端服务，请确认 Sales Agent 服务正在运行，并打开 8000/sales 或 8000/customer。";
+const NETWORK_ERROR_MESSAGE = "无法连接后端服务，请确认 SalesAgentTeams 服务正在运行，并使用当前端口访问 /sales 或 /customer。";
 
 let sessionId = window.localStorage.getItem(ACTIVE_SESSION_KEY) || null;
 let sessions = [];
@@ -492,7 +492,7 @@ function appendMessageNode(role, text, senderType = defaultSenderType(role), cre
   if (role === "assistant") {
     const img = document.createElement("img");
     img.src = "/favicon.ico?v=20260507";
-    img.alt = "Sales Agent";
+    img.alt = "SalesAgentTeams";
     avatar.appendChild(img);
   } else if (role === "user") {
     applyCustomerAvatar(avatar);

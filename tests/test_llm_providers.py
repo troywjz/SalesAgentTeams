@@ -449,3 +449,45 @@ def test_http_client_without_budget_keeps_original_max_tokens(
     captured.clear()
     asyncio.run(client.chat([ChatMessage(role="user", content="test")]))
     assert "max_tokens" not in captured["payload"]
+
+
+def test_official_deepseek_disables_thinking_and_enables_json_output(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = LLMProviderConfig(
+        provider="deepseek",
+        api_url="https://api.deepseek.com/chat/completions",
+        api_key="test-key",
+        model="deepseek-v4-flash",
+        protocol=LLMProtocol.openai_chat,
+        timeout_seconds=1,
+    )
+    client = HttpLLMClient(config)
+    captured: dict = {}
+
+    async def capture_post_json(_url, payload, _headers):
+        captured["payload"] = payload
+        return {
+            "choices": [
+                {
+                    "finish_reason": "stop",
+                    "message": {"role": "assistant", "content": '{"ok": true}'},
+                }
+            ]
+        }
+
+    monkeypatch.setattr(client, "_post_json", capture_post_json)
+
+    import asyncio
+
+    asyncio.run(
+        client.chat(
+            [ChatMessage(role="user", content="请输出 JSON")],
+            max_tokens=400,
+            response_format="json",
+        )
+    )
+
+    assert captured["payload"]["thinking"] == {"type": "disabled"}
+    assert captured["payload"]["response_format"] == {"type": "json_object"}
+    assert captured["payload"]["max_tokens"] == 400

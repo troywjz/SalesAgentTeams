@@ -26,10 +26,10 @@ class AdminConfigItem:
 
 # 只允许修改不会暴露密钥、数据库连接串或认证根密钥的配置。
 CONFIG_ITEMS = [
-    AdminConfigItem("DEMO_MODE", "强制 Demo 模型", "运行时配置", "bool", "false", "开启后跳过真实模型，始终使用本地 Demo 模型。"),
+    AdminConfigItem("DEMO_MODE", "强制 Demo 模型", "运行时配置", "bool", "true", "开启后跳过真实模型，始终使用本地 Demo 模型；比赛展示建议保持开启。"),
     AdminConfigItem("APP_RELOAD", "开发自动重载", "运行时配置", "bool", "false", "开发调试时是否启用 Uvicorn 自动重载。"),
-    AdminConfigItem("LLM_PROVIDER", "主模型供应商", "模型配置", "string", "minimax", "优先尝试的真实 LLM 供应商。"),
-    AdminConfigItem("LLM_PROVIDER_FALLBACK", "模型兜底顺序", "模型配置", "string", "deepseek,aliyun,siliconflow", "逗号分隔的备用真实模型供应商。"),
+    AdminConfigItem("LLM_PROVIDER", "主模型供应商", "模型配置", "string", "demo", "比赛演示默认使用本地 demo；接入真实模型时再选择供应商。"),
+    AdminConfigItem("LLM_PROVIDER_FALLBACK", "模型兜底顺序", "模型配置", "string", "", "逗号分隔的备用真实模型供应商；留空可避免额外调用。"),
     AdminConfigItem("MINIMAX_MODEL", "MiniMax 模型", "模型配置", "string", "", "MiniMax 供应商使用的模型名。"),
     AdminConfigItem("DEEPSEEK_MODEL", "DeepSeek 模型", "模型配置", "string", "", "DeepSeek 供应商使用的模型名。"),
     AdminConfigItem("ALIYUN_MODEL", "阿里云模型", "模型配置", "string", "", "阿里云兼容接口使用的模型名。"),

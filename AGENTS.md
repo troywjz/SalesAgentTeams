@@ -1,0 +1,28 @@
+# 项目协作说明
+
+## 项目地图
+
+- `app/`：FastAPI、LangGraph 六 Agent、数据库和 Web API。
+- `sales_agent_teams/`：业务 Agent 到 Worker 的契约与适配层。
+- `agentteams/`：Worker SOUL、版本化 Skill、打包和本地团队运行器。
+- `mcp_servers/`：销售 Bridge MCP 与评估/3D 热力图 MCP。
+- `data/`：只可提交公开办公技能示例；私有同名文件由 `.gitignore` 排除。
+- `evaluation/`：公开快照、数据集和评估代码；结果目录不提交。
+- `submission/preliminary/`：GOAI 初赛提交材料。
+
+## 不可破坏的边界
+
+- 运行时数据库名必须是 `sales_agent_demo`，默认端口 `15432`；禁止连接原会计业务库。
+- 默认 `DEMO_MODE=true`，测试不得调用真实 LLM 或 Embedding API。
+- 所有客户可见自动回复必须经过 Safety Agent；付款、合同、退款、发票、企业数据等转人工。
+- Skill 改动后同步更新 `sales_agent_teams/bridge.py` 中版本并重建 Worker 包。
+- 不提交 `.env`、密钥、真实聊天、私有知识、评估结果或本地绝对路径。
+
+## 完成前验证
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe scripts\check_competition_readiness.py
+.\.venv\Scripts\python.exe scripts\check_open_source.py
+git diff --check
+```

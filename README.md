@@ -1,86 +1,77 @@
 # SalesAgentTeams
 
-企业销售多智能体协同系统，面向 GOAI Agent Infra 赛道。
+面向 GOAI Agent Infra 赛道的办公技能培训销售多智能体系统。六个业务 Agent 一一映射为六个 AgentTeams Worker；LangGraph 保留为业务流程内核，AgentTeams 负责团队协作，Skill 固化能力边界，MCP 提供角色受限工具和离线评估可视化。
 
-本项目将已有销售智能体的六个业务 Agent 映射为六个 AgentTeams Worker，并通过 Skill 和 MCP 形成可审计的协作链路。原有 LangGraph 保留为业务流程内核，AgentTeams 负责外层 Worker 协作、状态传递和运行环境。
+默认配置可直接演示且不会调用外部 LLM：Web 使用 `18100`，独立 PostgreSQL 使用 `15432/sales_agent_demo`，不会访问原销售项目的 `8000` 或会计业务数据库。
 
-## 快速运行
+## 三分钟启动
 
-要求：Windows 10/11、Python 3.12+。使用 UTF-8 终端。
+要求：Windows 10/11、Python 3.11+、Docker Desktop、UTF-8 终端。
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+docker compose -f deployment/docker-compose.demo-db.yml up -d
 Copy-Item .env.example .env
-.\.venv\Scripts\python.exe scripts\run_demo_team.py
+.\scripts\setup_demo.ps1
+.\scripts\seed_demo_data.ps1
+.\start_demo.cmd
 ```
 
-`run_demo_team.py` 使用本地演示模型，不需要外部 API，应该输出六个 Worker 的运行轨迹、最终回复和安全交接状态。
+页面入口：
 
-## 离线评估
+- 销售端：`http://127.0.0.1:18100/sales`，账号 `wangjie@salesagent.com`，密码 `123456`
+- 客户模拟端：`http://127.0.0.1:18100/customer`，无需登录
+- 管理员端：`http://127.0.0.1:18100/admin`，账号 `admin`，密码 `admin123`
+- 健康检查：`http://127.0.0.1:18100/health`
 
-公开样例位于 `evaluation/datasets/demo_cases.csv`。运行原始评估：
+以上账号只适用于本地公开 Demo。公开部署前必须修改密码和 `APP_SECRET_KEY`。
+
+## 架构与比赛能力
+
+- 六 Worker：Memory、Intent、SOP、Knowledge、Conversation/Team Leader、Safety。
+- 十个版本化 Skill：六个业务 Skill、团队协调、证据交接、离线评估和 3D 热力图。
+- 两个 MCP：销售 Agent Bridge（六个角色受限工具）和 Evaluation Insights（回放、评分、热力图）。
+- 两类上下文能力：受控会话记忆、授权知识检索；节点调用与 LLM 调用分别留痕。
+- 安全闭环：输入路由、任务分解、证据检索、草稿、安全审核、人工接管、记忆更新。
+
+详细边界见 `docs/ARCHITECTURE.md`、`docs/AGENT_IDENTITIES.md` 和 `docs/operations/runbook.md`。
+
+## 零 API 功能验证
 
 ```powershell
-.\.venv\Scripts\python.exe evaluation\run.py --input-csv evaluation\datasets\demo_cases.csv --demo
+.\scripts\verify_demo.ps1
 ```
 
-也可以通过 `sales-evaluation-insights-mcp` 调用 `run_offline_evaluation`、`score_offline_evaluation` 和 `generate_3d_heatmap`。评估不会读取私有数据，不会在没有人工评分时生成虚假分数。
+该脚本会依次执行全量测试、确定性团队试运行、GOAI 就绪检查、开源审计和 Git 空白字符检查，并在任一步失败时立即返回非零结果。
 
-公开流程演示（其中评分标签是流水线测试值，不是正式评估结论）：
+`DEMO_MODE=true` 和 `LLM_PROVIDER=demo` 会强制使用确定性本地模型。需要接入真实模型时，显式关闭 Demo 模式并在本地 `.env` 配置供应商；默认单次请求最多尝试 1 个供应商、推理预留为 0，六 Agent 的输出 token 上限也已按结构化结果收紧。
+
+## MCP 与 AgentTeams
+
+启动两个 HTTP MCP：
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\run_demo_evaluation_pipeline.py
+docker compose -f deployment/docker-compose.mcp.yml up --build -d
 ```
 
-## MCP
+- 销售 Agent Bridge MCP：`http://127.0.0.1:18081/mcp`
+- Evaluation Insights MCP：`http://127.0.0.1:18082/mcp`
 
-本地 stdio：
-
-```powershell
-.\.venv\Scripts\python.exe -m mcp_servers.evaluation_insights --transport stdio
-.\.venv\Scripts\python.exe -m mcp_servers.sales_agent_bridge --transport stdio
-```
-
-Docker HTTP：
-
-```powershell
-docker compose -f deployment/docker-compose.mcp.yml up --build
-```
-
-两个服务分别监听 `18081` 和 `18082`，供 AgentTeams 或 MCP 客户端使用。
-
-## AgentTeams
+构建并应用 Worker 包：
 
 ```powershell
 .\.venv\Scripts\python.exe agentteams\build_worker_packages.py
-```
-
-然后安装官方 AgentTeams 并应用。`agt` 是 AgentTeams Controller 提供的 CLI，不需要写入 Python `requirements.txt`；Docker 安装模式通过 Controller 容器调用。Worker 包由宿主机的本地只读 HTTP 服务提供给 Worker 容器：
-
-```powershell
 .\scripts\start_agentteams_package_server.ps1
 docker cp deployment/agentteams/sales-agent-teams.yaml agentteams-controller:/tmp/sales-agent-teams.yaml
 docker exec agentteams-controller agt apply -f /tmp/sales-agent-teams.yaml
 .\scripts\start_agentteams_workers.ps1
 ```
 
-`agt apply` 后建议执行 Worker 健康检查脚本；它会逐个启动退出的 Worker，并同时检查 Docker 状态和容器内 QwenPaw `/api/version`。应用前需要准备 AgentTeams 的 LLM 配置、Docker Desktop 和两个 HTTP MCP 服务。详细映射见 `docs/ARCHITECTURE.md`。
+`agt` 是 AgentTeams Controller 内的 CLI，不属于 Python 包，因此不写入 `requirements.txt`。AgentTeams Worker 的平台模型配置与 Web Demo 的本地确定性模型是两个独立运行层；无 API 测试不会向 Manager 发送真实模型任务。
 
-Worker 包服务需要在 `agt apply` 以及后续 Worker 重启期间保持运行；它只提供仓库中的公开 zip 包，不读取密钥或业务数据库。
+## 评估边界
 
-## 质量检查
+公开数据位于 `evaluation/datasets/demo_cases.csv` 和 `evaluation/knowledge_snapshot/`。Evaluation MCP 在没有人工评分时只生成回放和盲评模板，不补造分数。既有授权离线盲评结论只作为历史证据写入 `submission/preliminary/历史评测与验证报告.md`，本次未重跑，也不把离线分数表述为转化率提升。
 
-```powershell
-.\.venv\Scripts\python.exe -m pytest -q
-.\.venv\Scripts\python.exe scripts\check_open_source.py
-git diff --check
-```
+## 比赛材料与许可证
 
-## 比赛材料
-
-初赛简介、方案 PPT/PDF、运行证据和开源说明位于 `submission/preliminary/`。
-
-## 许可证
-
-本项目使用 AGPL-3.0。原始销售 Demo 来源、第三方依赖和公开数据说明见 `LICENSE`、`docs/OPEN_SOURCE_CHECKLIST.md` 及比赛材料。
+初赛简介、PPT/PDF、合规映射、运行证据和开源声明位于 `submission/preliminary/`。项目使用 AGPL-3.0；公开仓库不包含 `.env`、真实聊天、私有知识、模型密钥和原会计业务数据。

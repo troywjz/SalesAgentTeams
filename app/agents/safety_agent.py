@@ -6,4 +6,4 @@ class SafetyAgent(BaseLLMAgent):
     prompt_file = "safety_agent.md"
     output_kind = "json"
     temperature = 0.1
-    max_tokens = 1200
+    max_tokens = 600

@@ -1,11 +1,15 @@
 ---
 name: knowledge-grounding
-description: 从授权知识快照中检索销售事实并返回可引用证据。
+description: 从授权的办公技能知识快照中检索事实并返回可引用证据。
 ---
 
 # Knowledge Grounding Skill
 
-版本：1.0.0
+版本：1.1.0
+
+## 目的
+
+为回复提供可追踪的课程、价格、交付、FAQ 和 SOP 事实，避免模型补造。
 
 ## 输入
 
@@ -13,16 +17,32 @@ description: 从授权知识快照中检索销售事实并返回可引用证据�
 
 ## 输出
 
-返回匹配方案、事实、政策提示、缺失信息和 `knowledge_sufficiency`。
+匹配方案、事实、政策提示、缺失信息、来源和 `knowledge_sufficiency`。
 
-## 触发与边界
+## 触发条件
 
-在 SOP 决策后触发。只读取授权知识源，不读取风控规则之外的私有文件，不把推测写成产品事实。
+客户询问课程、价格、交付、流程或方案匹配时在 SOP 决策后触发。
+
+## 依赖工具
+
+Sales Agent Bridge MCP 的 `run_knowledge_agent`、公开办公技能知识快照、`evidence-handoff`。
 
 ## 失败处理
 
-知识源不可用或证据不足时返回 `insufficient`，让 Conversation Worker 采用澄清式回复；不得自行补全价格、权益或承诺。
+知识源不可用或证据不足时返回 `insufficient`，让后续 Worker 澄清或转人工。
 
-## 验证与复用
+## 安全边界
 
-验证每条事实有来源或明确标记缺失；可复用于商品咨询、售前问答和内部知识助手。
+只读取授权知识源；风控规则由 Safety Worker 独占；不读取 `.env`、私有聊天或原会计数据库。
+
+## 复用价值
+
+可替换知识快照复用于商品咨询、售前问答和内部知识助手。
+
+## 多 Agent 流程关系
+
+承接 SOP Worker，向 Conversation 和 Safety Worker提供事实与缺失项。
+
+## 验证
+
+校验每条事实有来源，价格来自 SKU，缺失项明确标记，安全规则未混入普通知识检索。

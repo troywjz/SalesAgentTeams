@@ -3,9 +3,14 @@
 import json
 import os
 import sys
+from pathlib import Path
 
 import httpx
 import pytest
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.core.config import get_settings
 
@@ -100,7 +105,7 @@ def main() -> None:
     print("\n=== Test 5: Continue conversation ===")
     r = post(
         "/api/chat",
-        {"message": "我想考初级会计，大概多少钱", "session_id": sid},
+        {"message": "我想系统学 Excel 函数和报表，大概多少钱", "session_id": sid},
     )
     if not check("chat-continue", r):
         errors.append("chat-continue")

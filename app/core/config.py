@@ -8,16 +8,16 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 class Settings(BaseSettings):
-    app_name: str = Field(default="Sales Agent Demo", alias="APP_NAME")
+    app_name: str = Field(default="SalesAgentTeams 办公技能培训 Demo", alias="APP_NAME")
     app_env: str = Field(default="demo", alias="APP_ENV")
-    # Demo 仍然是 Windows 的运行形态，但模型调用默认优先尝试真实供应商。
-    # 只有没有任何可用真实模型配置，或显式开启 DEMO_MODE 时才使用 DemoLLMClient。
-    demo_mode: bool = Field(default=False, alias="DEMO_MODE")
+    # 比赛开源版默认使用确定性本地模型，避免试运行误调用真实 API。
+    # 只有演示者显式关闭 DEMO_MODE 并配置供应商密钥后才启用真实模型。
+    demo_mode: bool = Field(default=True, alias="DEMO_MODE")
     demo_agent_delay_ms: int = Field(default=60, alias="DEMO_AGENT_DELAY_MS")
     demo_seed_data: bool = Field(default=True, alias="DEMO_SEED_DATA")
-    demo_allow_unsafe_seed: bool = Field(default=False, alias="DEMO_ALLOW_UNSAFE_SEED")
     app_host: str = Field(default="127.0.0.1", alias="APP_HOST")
-    app_port: int = Field(default=8000, alias="APP_PORT")
+    # 与原销售项目的 8000 端口隔离，允许两套服务同时运行。
+    app_port: int = Field(default=18100, alias="APP_PORT")
     app_reload: bool = Field(default=False, alias="APP_RELOAD")
     app_secret_key: str = Field(default="change-me", alias="APP_SECRET_KEY")
     auth_token_ttl_seconds: int = Field(default=43200, alias="AUTH_TOKEN_TTL_SECONDS")
@@ -27,7 +27,7 @@ class Settings(BaseSettings):
 
     # Windows Python 服务直连 PostgreSQL；数据库可继续由 Docker 或独立服务提供。
     database_url: str = Field(
-        default="postgresql+psycopg://sales_agent:change-me@127.0.0.1:5432/sales_agent_demo",
+        default="postgresql+psycopg://sales_agent:change-me@127.0.0.1:15432/sales_agent_demo",
         alias="DATABASE_URL",
     )
     # 数据库不可达时尽快失败并使用既有降级逻辑，避免同步连接无限阻塞请求线程。
@@ -36,14 +36,14 @@ class Settings(BaseSettings):
         ge=1,
         alias="DATABASE_CONNECT_TIMEOUT_SECONDS",
     )
-    llm_provider: str = Field(default="minimax", alias="LLM_PROVIDER")
+    llm_provider: str = Field(default="demo", alias="LLM_PROVIDER")
     llm_provider_fallback: str = Field(
-        default="deepseek,aliyun,siliconflow",
+        default="",
         alias="LLM_PROVIDER_FALLBACK",
     )
     llm_timeout_seconds: float = Field(default=90.0, alias="LLM_TIMEOUT_SECONDS")
     llm_max_attempts_per_request: int = Field(
-        default=0,
+        default=1,
         alias="LLM_MAX_ATTEMPTS_PER_REQUEST",
     )
     # 推理模型（如 deepseek 推理版）的 reasoning token 预留预算：叠加到每次请求
@@ -51,7 +51,7 @@ class Settings(BaseSettings):
     # 预算 >0 时，reasoning-only 响应还会触发同供应商放宽 max_tokens 重试一次。
     # 非推理模型传 0 表示不预留、不触发放宽重试。
     llm_reasoning_budget_tokens: int = Field(
-        default=4096,
+        default=0,
         ge=0,
         alias="LLM_REASONING_BUDGET_TOKENS",
     )

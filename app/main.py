@@ -70,7 +70,7 @@ async def lifespan(_app: FastAPI):
 app = FastAPI(
     title=settings.app_name,
     version="0.17.0-demo",
-    description="Sales Agent Windows showcase demo.",
+    description="SalesAgentTeams 办公技能培训本地演示。",
     lifespan=lifespan,
 )
 
@@ -136,7 +136,7 @@ def print_startup_links() -> None:
     current_base = f"http://{display_host}:{settings.app_port}"
     lines = [
         "",
-        "Sales Agent 访问入口：",
+        "SalesAgentTeams 访问入口：",
         f"  销售端：{current_base}/sales",
         f"  客户模拟端：{current_base}/customer",
         f"  管理员端：{current_base}/admin",

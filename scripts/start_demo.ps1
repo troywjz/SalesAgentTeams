@@ -1,4 +1,4 @@
-$ErrorActionPreference = "Stop"
+﻿$ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $OutputEncoding = [System.Text.UTF8Encoding]::new()
 
@@ -11,10 +11,12 @@ if (-not (Test-Path -LiteralPath $venvPython) -or -not (Test-Path -LiteralPath "
 }
 
 Write-Host ""
-Write-Host "Sales Agent Demo is starting" -ForegroundColor Green
-Write-Host "Sales UI: http://127.0.0.1:8000/sales"
-Write-Host "Customer UI: http://127.0.0.1:8000/customer"
-Write-Host "Admin UI: http://127.0.0.1:8000/admin"
+Write-Host "SalesAgentTeams office-skills demo is starting" -ForegroundColor Green
+$appPort = & $venvPython -X utf8 -c "from app.core.config import get_settings; print(get_settings().app_port)"
+Write-Host "Sales:    http://127.0.0.1:$appPort/sales"
+Write-Host "Customer: http://127.0.0.1:$appPort/customer"
+Write-Host "Admin:    http://127.0.0.1:$appPort/admin"
+Write-Host "Health:   http://127.0.0.1:$appPort/health"
 Write-Host "Press Ctrl+C to stop the service."
 Write-Host ""
 $env:PYTHONUTF8 = "1"

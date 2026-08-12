@@ -6,4 +6,4 @@ class SOPAgent(BaseLLMAgent):
     prompt_file = "sop_agent.md"
     output_kind = "json"
     temperature = 0.2
-    max_tokens = 1200
+    max_tokens = 600

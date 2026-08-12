@@ -53,7 +53,7 @@ const EMPTY_VALUE = "暂未识别";
 // 需高于后端 CHAT_REQUEST_TIMEOUT_SECONDS，避免前端先取消导致无回复落库。
 const REQUEST_TIMEOUT_MS = 240000;
 const GENERIC_SERVICE_ERROR = "服务暂时不可用，已停止等待。请稍后重试，或联系人工跟进。";
-const NETWORK_ERROR_MESSAGE = "无法连接后端服务，请确认 Sales Agent 服务正在运行，并打开 8000/sales 或 8000/customer。";
+const NETWORK_ERROR_MESSAGE = "无法连接后端服务，请确认 SalesAgentTeams 服务正在运行，并使用当前端口访问 /sales 或 /customer。";
 const HIDDEN_OBJECT_KEYS = new Set(["raw_output"]);
 let pendingConfirmAction = null;
 let isComposing = false;
@@ -1038,7 +1038,7 @@ function appendMessageNode(role, text, senderType = defaultSenderType(role), cre
   if (role === "assistant") {
     const img = document.createElement("img");
     img.src = "/favicon.ico?v=20260507";
-    img.alt = "Sales Agent";
+    img.alt = "SalesAgentTeams";
     avatar.appendChild(img);
   } else if (role === "user") {
     applyCustomerAvatar(avatar);
@@ -1397,7 +1397,7 @@ function renderTransferStatus(transferFlag, transferReason) {
   reason.className = "transfer-reason";
   reason.textContent = transferFlag
     ? (transferReason || "当前由人工接管，系统不自动回复。")
-    : "当前由 Sales Agent 自动回复。";
+    : "当前由 SalesAgentTeams 自动回复。";
   reason.hidden = !transferFlag;
 
   transferStatus.append(status, button, reason);

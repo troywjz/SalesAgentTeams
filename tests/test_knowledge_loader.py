@@ -14,11 +14,11 @@ def test_knowledge_loader_never_selects_safety_rules_for_knowledge() -> None:
     assert "safety_rules" not in selected
 
 
-def test_knowledge_loader_skips_skus_for_exam_process_question() -> None:
+def test_knowledge_loader_skips_skus_for_software_howto_question() -> None:
     loader = KnowledgeLoader()
 
     selected = loader.select_knowledge_sources(
-        message="初级会计怎么考，需要什么条件？",
+        message="Word 自动目录怎么更新，需要什么步骤？",
         intent={},
         current_stage="开场",
     )
@@ -31,7 +31,7 @@ def test_knowledge_loader_skips_skus_for_exam_process_question() -> None:
 def test_knowledge_loader_treats_legacy_price_cents_as_yuan(tmp_path) -> None:
     (tmp_path / "skus.example.csv").write_text(
         "\ufeffsku_id,sku_name,price_cents,currency,discount_policy\n"
-        "sku-1,初级会计体验课,598,CNY,限时实际成交价298\n",
+        "sku-1,Excel 报表体验课,598,CNY,公开演示价298\n",
         encoding="utf-8",
     )
     loader = KnowledgeLoader(tmp_path)
@@ -43,7 +43,7 @@ def test_knowledge_loader_treats_legacy_price_cents_as_yuan(tmp_path) -> None:
         current_stage="开场",
     )
 
-    assert context["skus"][0]["sku_name"] == "初级会计体验课"
+    assert context["skus"][0]["sku_name"] == "Excel 报表体验课"
     assert context["skus"][0]["list_price_yuan"] == "598"
     assert "price_cents" not in context["skus"][0]
 

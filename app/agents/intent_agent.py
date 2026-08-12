@@ -6,4 +6,4 @@ class IntentAgent(BaseLLMAgent):
     prompt_file = "intent_agent.md"
     output_kind = "json"
     temperature = 0.1
-    max_tokens = 800
+    max_tokens = 400
