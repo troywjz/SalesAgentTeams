@@ -56,9 +56,10 @@ def validate_runtime_config(
         notes.append(f"Web 主模型：{provider}（真实 API）。")
 
     fallback_providers = _split_csv(values.get("LLM_PROVIDER_FALLBACK", ""))
-    for fallback in fallback_providers:
-        if fallback != provider:
-            errors.extend(_validate_provider(fallback, values, label="备用模型"))
+    if not demo_mode:
+        for fallback in fallback_providers:
+            if fallback != provider:
+                errors.extend(_validate_provider(fallback, values, label="备用模型"))
 
     attempt_limit = _positive_int(values.get("LLM_MAX_ATTEMPTS_PER_REQUEST", "1"))
     if attempt_limit is None:
@@ -69,7 +70,9 @@ def validate_runtime_config(
     vector_enabled = _as_bool(values.get("SALES_RAG_ENABLED", "false")) or _as_bool(
         values.get("SAFETY_VECTOR_ENABLED", "false")
     )
-    if vector_enabled:
+    if demo_mode and vector_enabled:
+        errors.append("零 API 模式需要同时关闭 SALES_RAG_ENABLED 和 SAFETY_VECTOR_ENABLED。")
+    elif vector_enabled:
         embedding_provider = values.get("EMBEDDING_PROVIDER", "siliconflow").strip().lower()
         if not _embedding_key(embedding_provider, values):
             errors.append(f"已启用向量功能，但 Embedding 供应商 {embedding_provider} 缺少可用 API Key。")

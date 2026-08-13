@@ -104,11 +104,15 @@ def validate_code_and_public_data() -> list[str]:
         "APP_PORT=18100",
         "DEMO_MODE=false",
         "LLM_PROVIDER=deepseek",
+        "LLM_PROVIDER_FALLBACK=aliyun,siliconflow",
         "DEEPSEEK_API_KEY=",
+        "ALIYUN_API_KEY=",
+        "SILICONFLOW_API_KEY=",
         "DEEPSEEK_MODEL=deepseek-v4-flash",
         "AGENTTEAMS_DEFAULT_MODEL=deepseek-v4-flash",
-        "LLM_MAX_ATTEMPTS_PER_REQUEST=1",
+        "LLM_MAX_ATTEMPTS_PER_REQUEST=3",
         "LLM_REASONING_BUDGET_TOKENS=0",
+        "SALES_RAG_ENABLED=true",
         "sales_agent_demo",
     )
     for expected in required_defaults:

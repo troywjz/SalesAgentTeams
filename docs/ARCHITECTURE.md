@@ -40,5 +40,5 @@ AgentTeams 不替换 LangGraph。`sales_agent_teams.bridge` 是两者之间的�
 
 - 比赛 Web 固定使用 `18100`，独立 PostgreSQL 固定使用 `15432/sales_agent_demo`；运行时数据库护栏会拒绝任何其他数据库名。
 - 原销售项目的会计数据、会话历史、`8000` Web 和 `5432` PostgreSQL 不在比赛项目写入范围内。
-- `.env.example` 默认以 `DEMO_MODE=false`、`LLM_PROVIDER=deepseek` 和 `deepseek-v4-flash` 进行正式展示；启动前门禁要求主供应商 Key/URL/模型齐全，单请求默认只尝试一个供应商。自动化验证则强制切换到本地 Demo 模型，禁止产生外部调用。
+- `.env.example` 默认以 `DEMO_MODE=false`、`LLM_PROVIDER=deepseek`、`LLM_PROVIDER_FALLBACK=aliyun,siliconflow` 和销售案例向量 RAG 进行正式展示；启动前门禁要求三个供应商 Key/URL/模型与 Embedding 配置齐全。自动化验证强制切换到本地 Demo 模型并关闭向量能力，禁止产生外部调用。
 - Supervisor 对强制转人工和简单寒暄走确定性路由；完整链路再调用所需 Agent，减少无效 token。

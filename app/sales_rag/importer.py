@@ -91,7 +91,7 @@ def replace_sales_cases(
     db: Session,
     path: Path | str | None,
 ) -> int:
-    """以一个 CSV 完整替换正式 RAG 案例；调用方负责事务提交。"""
+    """以一个 CSV 完整替换正式 RAG 案例；未变化的案例复用既有向量。"""
 
     if path is None:
         return 0
@@ -99,6 +99,17 @@ def replace_sales_cases(
     rows = load_sales_case_csv(source_path)
     source_name = source_path.stem
     source_reference = _source_reference(source_path)
+
+    # Demo 种子数据会在每次启动时幂等导入。按稳定 chunk_id 保存向量，避免内容
+    # 未变化时先删表再重新调用 Embedding；文本变化会生成不同 chunk_id 并重新索引。
+    existing_vectors: dict[str, dict[str, str | None]] = {}
+    for existing_chunk in db.scalars(select(SalesRAGChunk)).all():
+        values = {
+            column_name: getattr(existing_chunk, column_name, None)
+            for column_name in SALES_RAG_VECTOR_COLUMNS.values()
+        }
+        values["embedding_text"] = _embedding_text(existing_chunk)
+        existing_vectors[existing_chunk.chunk_id] = values
 
     db.execute(delete(SalesRAGChunk))
     db.execute(delete(SalesRAGConversation))
@@ -127,22 +138,25 @@ def replace_sales_cases(
                 metadata_json=json.dumps({"case_id": row.case_id}, ensure_ascii=False),
             )
         )
-        db.add(
-            SalesRAGChunk(
-                chunk_id=chunk_id,
-                conversation_hash=conversation_hash,
-                chunk_index=index,
-                source_name=source_name,
-                customer_text=row.customer_message,
-                sales_reply=row.sales_reply,
-                context_before=row.context_before,
-                chunk_text=_chunk_text(row),
-                quality_score=row.quality_score,
-                tags_json=json.dumps(row.tags, ensure_ascii=False),
-                # 不保留源 CSV 的未识别列，避免把无关个人信息带入 RAG 数据库。
-                raw_json=json.dumps(normalized, ensure_ascii=False),
-            )
+        chunk = SalesRAGChunk(
+            chunk_id=chunk_id,
+            conversation_hash=conversation_hash,
+            chunk_index=index,
+            source_name=source_name,
+            customer_text=row.customer_message,
+            sales_reply=row.sales_reply,
+            context_before=row.context_before,
+            chunk_text=_chunk_text(row),
+            quality_score=row.quality_score,
+            tags_json=json.dumps(row.tags, ensure_ascii=False),
+            # 不保留源 CSV 的未识别列，避免把无关个人信息带入 RAG 数据库。
+            raw_json=json.dumps(normalized, ensure_ascii=False),
         )
+        previous = existing_vectors.get(chunk_id, {})
+        if previous.get("embedding_text") == _embedding_text(chunk):
+            for column_name in SALES_RAG_VECTOR_COLUMNS.values():
+                setattr(chunk, column_name, previous.get(column_name))
+        db.add(chunk)
     return len(rows)
 
 

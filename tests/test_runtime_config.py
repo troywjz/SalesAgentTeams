@@ -5,7 +5,16 @@ from app.demo_data import _assert_demo_database_target
 from app.llm import DemoLLMClient, create_llm_client
 
 
-def test_windows_demo_defaults_to_postgresql() -> None:
+def test_windows_demo_defaults_to_postgresql(monkeypatch: pytest.MonkeyPatch) -> None:
+    # verify_demo.ps1 会用进程变量强制零 API；本测试需要隔离这些覆盖项，验证代码默认值。
+    for name in (
+        "DEMO_MODE",
+        "LLM_PROVIDER",
+        "LLM_PROVIDER_FALLBACK",
+        "SALES_RAG_ENABLED",
+        "SAFETY_VECTOR_ENABLED",
+    ):
+        monkeypatch.delenv(name, raising=False)
     settings = Settings(_env_file=None)
 
     assert settings.database_url.startswith("postgresql+psycopg://")
@@ -13,11 +22,12 @@ def test_windows_demo_defaults_to_postgresql() -> None:
     assert settings.demo_seed_data is True
     assert settings.demo_mode is True
     assert settings.llm_provider == "demo"
-    assert settings.llm_provider_fallback == ""
+    assert settings.llm_provider_fallback == "aliyun,siliconflow"
     assert settings.app_port == 18100
     assert settings.database_connect_timeout_seconds == 5
     assert settings.evaluation_max_concurrency == 3
-    assert settings.llm_max_attempts_per_request == 1
+    assert settings.llm_max_attempts_per_request == 3
+    assert settings.sales_rag_enabled is False
     assert settings.llm_reasoning_budget_tokens == 0
     assert settings.llm_timeout_seconds == 90.0
     assert settings.chat_request_timeout_seconds == 300.0

@@ -29,6 +29,9 @@ def test_lifecycle_configuration_and_secret_boundaries() -> None:
         "APP_ENV=showcase",
         "DEMO_MODE=false",
         "LLM_PROVIDER=deepseek",
+        "LLM_PROVIDER_FALLBACK=aliyun,siliconflow",
+        "LLM_MAX_ATTEMPTS_PER_REQUEST=3",
+        "SALES_RAG_ENABLED=true",
         "DEEPSEEK_MODEL=deepseek-v4-flash",
         "AGENTTEAMS_ENABLED=true",
         "AGENTTEAMS_LLM_PROVIDER=",
@@ -41,6 +44,11 @@ def test_lifecycle_configuration_and_secret_boundaries() -> None:
     assert "scripts\\check_runtime_config.py" in (
         ROOT / "scripts" / "start_all.ps1"
     ).read_text(encoding="utf-8-sig")
+
+    setup_cmd = (ROOT / "setup.cmd").read_text(encoding="utf-8-sig")
+    assert 'if not exist "%~dp0.env"' in setup_cmd
+    assert 'copy /Y "%~dp0.env.example" "%~dp0.env"' in setup_cmd
+    assert "现有 .env 永远不会被覆盖" in setup_cmd
 
     dockerignore = (ROOT / ".dockerignore").read_text(encoding="utf-8")
     assert ".env\n" in dockerignore
@@ -63,6 +71,8 @@ def test_lifecycle_configuration_and_secret_boundaries() -> None:
     )
     assert "Test-WorkerStable" in worker_start_script
     assert "$workerStartAttempts = 2" in worker_start_script
+    assert "--connect-timeout 2 --max-time 5" in worker_start_script
+    assert "/api/agents/default/agent-status" in worker_start_script
 
 
 def test_worker_package_build_is_reproducible() -> None:
