@@ -14,7 +14,7 @@
 ## 不可破坏的边界
 
 - 运行时数据库名必须是 `sales_agent_demo`，默认端口 `15432`；禁止连接原会计业务库。
-- `.env.example` 默认用于真实模型正式展示；所有自动化测试必须显式强制 `DEMO_MODE=true`、`LLM_PROVIDER=demo`，不得调用真实 LLM 或 Embedding API。
+- `.env.example` 默认用于真实模型、三供应商回退和销售案例向量 RAG 展示；所有自动化测试必须显式强制 `DEMO_MODE=true`、`LLM_PROVIDER=demo`、`SALES_RAG_ENABLED=false`，不得调用真实 LLM 或 Embedding API。
 - 所有客户可见自动回复必须经过 Safety Agent；付款、合同、退款、发票、企业数据等转人工。
 - Skill 改动后同步更新 `sales_agent_teams/bridge.py` 中版本并重建 Worker 包。
 - 不提交 `.env`、密钥、真实聊天、私有知识、评估结果或本地绝对路径。

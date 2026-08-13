@@ -38,12 +38,12 @@ class Settings(BaseSettings):
     )
     llm_provider: str = Field(default="demo", alias="LLM_PROVIDER")
     llm_provider_fallback: str = Field(
-        default="",
+        default="aliyun,siliconflow",
         alias="LLM_PROVIDER_FALLBACK",
     )
     llm_timeout_seconds: float = Field(default=90.0, alias="LLM_TIMEOUT_SECONDS")
     llm_max_attempts_per_request: int = Field(
-        default=1,
+        default=3,
         alias="LLM_MAX_ATTEMPTS_PER_REQUEST",
     )
     # 推理模型（如 deepseek 推理版）的 reasoning token 预留预算：叠加到每次请求
@@ -123,6 +123,7 @@ class Settings(BaseSettings):
     )
     safety_vector_top_k: int = Field(default=3, alias="SAFETY_VECTOR_TOP_K")
     # Windows Demo 不预置向量案例；只有显式开启且数据库已有向量时才检索。
+    # 无 .env 时保持零 API 安全兜底；正式展示模板显式设为 true。
     sales_rag_enabled: bool = Field(default=False, alias="SALES_RAG_ENABLED")
     sales_rag_top_k: int = Field(default=3, alias="SALES_RAG_TOP_K")
     sales_rag_min_quality_score: float = Field(
@@ -179,7 +180,10 @@ class Settings(BaseSettings):
         alias="ALIYUN_API_URL",
     )
     aliyun_api_key: str | None = Field(default=None, alias="ALIYUN_API_KEY")
-    aliyun_model: str | None = Field(default="qwen-plus", alias="ALIYUN_MODEL")
+    aliyun_model: str | None = Field(
+        default="deepseek-v4-flash-0731",
+        alias="ALIYUN_MODEL",
+    )
     aliyun_models: str | None = Field(default=None, alias="ALIYUN_MODELS")
     aliyun_embedding_api_url: str | None = Field(
         default="https://dashscope.aliyuncs.com/compatible-mode/v1",
@@ -190,7 +194,7 @@ class Settings(BaseSettings):
         alias="ALIYUN_EMBEDDING_API_KEY",
     )
     aliyun_embedding_model: str | None = Field(
-        default="text-embedding-v4",
+        default="qwen3.7-text-embedding",
         alias="ALIYUN_EMBEDDING_MODEL",
     )
 

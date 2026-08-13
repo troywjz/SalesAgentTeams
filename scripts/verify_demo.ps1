@@ -16,6 +16,8 @@ $env:DEMO_MODE = "true"
 $env:LLM_PROVIDER = "demo"
 $env:LLM_PROVIDER_FALLBACK = ""
 $env:AGENTTEAMS_ENABLED = "false"
+$env:SALES_RAG_ENABLED = "false"
+$env:SAFETY_VECTOR_ENABLED = "false"
 
 function Invoke-Checked([string]$Label, [scriptblock]$Command) {
     Write-Host "--- $Label ---" -ForegroundColor Cyan

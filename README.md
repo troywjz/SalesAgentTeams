@@ -2,7 +2,7 @@
 
 面向 GOAI Agent Infra 赛道的办公技能培训销售多智能体系统。六个业务 Agent 一一映射为六个 AgentTeams Worker；LangGraph 保留为业务流程内核，AgentTeams 负责团队协作，Skill 固化能力边界，MCP 提供角色受限工具和离线评估可视化。
 
-公开配置默认使用真实模型正式展示：Web 使用 `18100`，独立 PostgreSQL 使用 `15432/sales_agent_demo`，不会访问原销售项目的 `8000` 或会计业务数据库。复制 `.env.example` 后只需填写 `DEEPSEEK_API_KEY`，Web 与 AgentTeams 会复用同一个密钥；零 API 测试由独立验证脚本强制切换到本地模型。
+公开配置默认使用真实模型正式展示：Web 使用 `18100`，独立 PostgreSQL 使用 `15432/sales_agent_demo`，不会访问原销售项目的 `8000` 或会计业务数据库。复制 `.env.example` 后填写 DeepSeek、阿里云和 SiliconFlow 三个 API Key，即可得到与已验收电脑一致的主模型回退、AgentTeams 和向量 RAG 配置；零 API 测试由独立验证脚本强制切换到本地模型。
 
 ## 新电脑首次准备
 
@@ -16,19 +16,19 @@
 
 - 检查 Python 3.11+、Docker Desktop 和 Docker Compose；缺少 Python 或 Docker Desktop 时优先通过 `winget` 安装。
 - 创建 `.venv`，安装并执行 `pip check` 校验 `requirements.txt` 中的全部 Python 依赖。
-- 自动创建缺失的 `.env`（也可手动复制 `.env.example`），不会覆盖已有配置。
+- `setup.cmd` 会在 `.env` 不存在时先复制 `.env.example`；PowerShell 准备脚本也有同样兜底，均不会覆盖已有配置或 Key。
 - 构建六个 Worker 包、拉取 PostgreSQL 镜像并构建两个 MCP 镜像。
 
 系统组件首次安装后如果 Windows 提示启用 WSL 2、虚拟化或重启，应完成提示后再次运行 `setup.cmd`。AgentTeams 控制面需要模型密钥，因此在第一次完整启动时由脚本通过固定提交与 SHA-256 校验后的官方安装器创建；其镜像也固定为本项目已经通过验收的 digest，避免 `latest` 漂移。
 
 然后填写 `.env`：
 
-- 推荐配置只需填写 `DEEPSEEK_API_KEY`。模板已预填 `DEMO_MODE=false`、`LLM_PROVIDER=deepseek`、当前官方 `deepseek-v4-flash` 模型名和接口地址。
+- 填写 `DEEPSEEK_API_KEY`、`ALIYUN_API_KEY` 和 `SILICONFLOW_API_KEY`。模板已预填 `DEMO_MODE=false`、主模型和三个供应商的接口与模型名。
 - AgentTeams 默认启用，`AGENTTEAMS_LLM_API_KEY` 留空即可复用 `DEEPSEEK_API_KEY`；只有使用不同供应商时才需要单独填写。
-- MiniMax、阿里云和 SiliconFlow 的接口及默认模型已预填；需要切换时填写相应 API Key 并修改 `LLM_PROVIDER`。默认无备用供应商、单请求只尝试一次，不会因失败自动多次扣费。
+- Web 默认按 `DeepSeek → 阿里云 → SiliconFlow` 回退，每个配置最多调用一次；只有前一个供应商失败才会调用后一个。MiniMax 仍作为可选供应商保留。
 - 暂时只展示 Web、数据库和 MCP 时，可设置 `AGENTTEAMS_ENABLED=false`。
 
-`DEMO_SEED_DATA=true` 仅幂等导入仓库内公开的办公技能培训样例和展示看板，不决定模型模式，也不会连接或修改原会计培训数据库。`SALES_RAG_ENABLED=false` 与 `SAFETY_VECTOR_ENABLED=false` 可避免启动时产生额外 Embedding 调用；普通 FAQ/SOP/SKU 知识检索仍正常工作。
+`DEMO_SEED_DATA=true` 仅幂等导入仓库内公开的办公技能培训样例和展示看板，不决定模型模式，也不会连接或修改原会计培训数据库。`SALES_RAG_ENABLED=true` 默认启用办公技能销售案例向量检索，优先复用 `SILICONFLOW_API_KEY`，失败时回退到 `ALIYUN_API_KEY`；首次启动会为公开案例建索引，后续内容未变化时复用已有向量，避免重复计费。`SAFETY_VECTOR_ENABLED=false` 仍保持关闭。
 
 ## 一键启动与关停
 
@@ -75,7 +75,7 @@
 
 该脚本会依次执行全量测试、确定性团队试运行、GOAI 就绪检查、开源审计和 Git 空白字符检查，并在任一步失败时立即返回非零结果。
 
-验证脚本会用进程级环境变量强制 `DEMO_MODE=true` 和 `LLM_PROVIDER=demo`，因此即使本机 `.env` 为正式展示配置，也不会调用真实 LLM。正式服务默认单次请求最多尝试 1 个供应商、推理预留为 0，六 Agent 的输出 token 上限也已按结构化结果收紧。
+验证脚本会用进程级环境变量强制 `DEMO_MODE=true`、`LLM_PROVIDER=demo` 并关闭向量 RAG，因此即使本机 `.env` 为正式展示配置，也不会调用真实 LLM 或 Embedding。正式服务最多依次尝试 3 个供应商、推理预留为 0，六 Agent 的输出 token 上限也已按结构化结果收紧。
 
 ## MCP 与 AgentTeams
 

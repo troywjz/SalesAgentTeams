@@ -25,7 +25,14 @@ function Get-WorkerState([string]$Name) {
 }
 
 function Test-QwenPawApi([string]$Name) {
-    & docker exec $Name sh -lc "curl -fsS http://127.0.0.1:8088/api/version >/dev/null 2>&1"
+    # curl 自身必须有硬超时；否则容器端口已接受连接但内部 API 卡死时，
+    # 整个 start_all.cmd 会永久等待，PowerShell 外层超时也无法给出 Worker 名称。
+    & docker exec $Name sh -lc (
+        "curl -fsS --connect-timeout 2 --max-time 5 " +
+        "http://127.0.0.1:8088/api/version >/dev/null 2>&1 && " +
+        "curl -fsS --connect-timeout 2 --max-time 5 " +
+        "http://127.0.0.1:8088/api/agents/default/agent-status >/dev/null 2>&1"
+    )
     return ($LASTEXITCODE -eq 0)
 }
 

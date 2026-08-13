@@ -46,6 +46,9 @@ class _ImportSession:
     def execute(self, statement):
         self.executed.append(statement)
 
+    def scalars(self, _statement):
+        return _ScalarResult([])
+
     def add(self, item):
         self.added.append(item)
 
@@ -61,6 +64,41 @@ def test_replace_sales_cases_stores_only_the_declared_csv_fields(tmp_path: Path)
     assert chunks[0].customer_text == "我担心自己零基础跟不上"
     assert "case_id" in chunks[0].raw_json
     assert len(session.executed) == 2
+
+
+def test_replace_sales_cases_reuses_vector_for_unchanged_embedding_text(
+    tmp_path: Path,
+) -> None:
+    source = _write_cases(tmp_path / "sales_cases.csv")
+    first = _ImportSession()
+    replace_sales_cases(first, source)
+    old_chunk = next(item for item in first.added if isinstance(item, SalesRAGChunk))
+    old_chunk.sales_embedding_gjld_q3e8b = "[0.1, 0.2]"
+
+    second = _ImportSession()
+    second.scalars = lambda _statement: _ScalarResult([old_chunk])
+    replace_sales_cases(second, source)
+
+    new_chunk = next(item for item in second.added if isinstance(item, SalesRAGChunk))
+    assert new_chunk.sales_embedding_gjld_q3e8b == "[0.1, 0.2]"
+
+
+def test_replace_sales_cases_discards_vector_when_embedding_text_changes(
+    tmp_path: Path,
+) -> None:
+    source = _write_cases(tmp_path / "sales_cases.csv")
+    first = _ImportSession()
+    replace_sales_cases(first, source)
+    old_chunk = next(item for item in first.added if isinstance(item, SalesRAGChunk))
+    old_chunk.sales_embedding_gjld_q3e8b = "[0.1, 0.2]"
+    old_chunk.customer_text = "已变化的客户问题"
+
+    second = _ImportSession()
+    second.scalars = lambda _statement: _ScalarResult([old_chunk])
+    replace_sales_cases(second, source)
+
+    new_chunk = next(item for item in second.added if isinstance(item, SalesRAGChunk))
+    assert new_chunk.sales_embedding_gjld_q3e8b is None
 
 
 class _ScalarResult:
