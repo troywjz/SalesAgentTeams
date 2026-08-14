@@ -281,7 +281,7 @@ def _seed_agent_metrics(db, index: int, session_id: str, turn_id: str, created_a
                 model_name=model,
                 elapsed_ms=18 + agent_index * 11 + index,
                 success=1,
-                input_json=json.dumps({"message": "公开办公技能培训演示消息"}, ensure_ascii=False),
+                input_json=json.dumps({"message": "公开 To C 网络销售演示消息"}, ensure_ascii=False),
                 output_json=json.dumps(output, ensure_ascii=False),
                 raw_output=json.dumps(output, ensure_ascii=False),
                 created_at=created_at + timedelta(minutes=4, milliseconds=agent_index * 40),
@@ -309,7 +309,7 @@ def _seed_agent_metrics(db, index: int, session_id: str, turn_id: str, created_a
                 )
             )
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="初始化独立的办公技能培训 Demo 数据。")
+    parser = argparse.ArgumentParser(description="初始化独立的 To C 网络销售 Demo 数据。")
     parser.add_argument(
         "--reset",
         action="store_true",
@@ -320,4 +320,4 @@ if __name__ == "__main__":
 
     init_db()
     seed_demo_environment(reset=arguments.reset)
-    print("办公技能培训 Demo 数据已就绪。")
+    print("To C 网络销售 Demo 数据已就绪。")

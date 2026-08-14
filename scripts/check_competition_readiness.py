@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from zipfile import BadZipFile, ZipFile
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,6 +39,14 @@ FORBIDDEN_PUBLIC_DATA_TERMS = (
     "推荐月薪",
     "就业保障班",
     "考不过重学",
+)
+DEPLOYED_WORKERS = (
+    "conversation_worker",
+    "intent_worker",
+    "knowledge_worker",
+    "memory_worker",
+    "safety_worker",
+    "sop_worker",
 )
 
 
@@ -83,16 +92,75 @@ def validate_agentteams_manifest() -> list[str]:
     return violations
 
 
+def validate_worker_packages() -> list[str]:
+    """确保六个可部署 Worker 包与当前源码和公共 Skill 完全一致。"""
+
+    violations: list[str] = []
+    workers_root = ROOT / "agentteams" / "workers"
+    packages_root = ROOT / "agentteams" / "worker-packages"
+    expected_packages = {f"{worker}.zip" for worker in DEPLOYED_WORKERS}
+    actual_packages = {path.name for path in packages_root.glob("*.zip")}
+    for name in sorted(actual_packages - expected_packages):
+        violations.append(f"存在未部署的旧 Worker 包: agentteams/worker-packages/{name}")
+
+    common_root = workers_root / "common"
+    for worker in DEPLOYED_WORKERS:
+        package = packages_root / f"{worker}.zip"
+        if not package.is_file():
+            violations.append(f"Worker 包缺失: {package.relative_to(ROOT)}")
+            continue
+
+        expected: dict[str, bytes] = {}
+        for source_root in (workers_root / worker, common_root):
+            for source in sorted(path for path in source_root.rglob("*") if path.is_file()):
+                expected[source.relative_to(source_root).as_posix()] = source.read_bytes()
+        try:
+            with ZipFile(package) as archive:
+                actual = {
+                    entry.filename: archive.read(entry)
+                    for entry in archive.infolist()
+                    if not entry.is_dir()
+                }
+        except BadZipFile:
+            violations.append(f"Worker 包损坏: {package.relative_to(ROOT)}")
+            continue
+
+        if actual.keys() != expected.keys():
+            violations.append(f"Worker 包文件清单与源码不一致: {package.relative_to(ROOT)}")
+            continue
+        mismatched = sorted(name for name in expected if actual[name] != expected[name])
+        if mismatched:
+            violations.append(
+                f"Worker 包内容与源码不一致: {package.relative_to(ROOT)} -> {', '.join(mismatched)}"
+            )
+    return violations
+
+
 def validate_submission_assets() -> list[str]:
     violations: list[str] = []
-    body = INTRO.read_text(encoding="utf-8")
-    plain = re.sub(r"[#>*`\s｜—_-]", "", body)
-    if len(plain) < 500:
-        violations.append(f"作品简介不足 500 字: {len(plain)}")
-    for name in ("SalesAgentTeams_初赛方案.pptx", "SalesAgentTeams_初赛方案.pdf"):
-        path = INTRO.parent / name
-        if not path.exists() or path.stat().st_size == 0:
-            violations.append(f"提交材料缺失: {name}")
+    lines = INTRO.read_text(encoding="utf-8").splitlines()
+    # 官网要求“作品简介 500 字以内”；作品名、参赛者和 Markdown 标题不计入正文。
+    body = "".join(
+        line.strip()
+        for line in lines
+        if line.strip()
+        and not line.lstrip().startswith("#")
+        and not line.startswith("作品名称：")
+        and not line.startswith("参赛者：")
+    )
+    visible_length = len(re.sub(r"\s", "", body))
+    if visible_length == 0:
+        violations.append("作品简介正文为空")
+    elif visible_length > 500:
+        violations.append(f"作品简介超过 500 字: {visible_length}")
+
+    # 官网允许提交 PPT 或 PDF，不要求两个格式同时存在。
+    deck_paths = [
+        INTRO.parent / "SalesAgentTeams_初赛方案.pptx",
+        INTRO.parent / "SalesAgentTeams_初赛方案.pdf",
+    ]
+    if not any(path.is_file() and path.stat().st_size > 0 for path in deck_paths):
+        violations.append("提交材料缺失: SalesAgentTeams_初赛方案.pptx 或 .pdf")
     return violations
 
 
@@ -153,6 +221,7 @@ def collect_violations() -> list[str]:
     return [
         *validate_skill_contracts(),
         *validate_agentteams_manifest(),
+        *validate_worker_packages(),
         *validate_submission_assets(),
         *validate_code_and_public_data(),
     ]

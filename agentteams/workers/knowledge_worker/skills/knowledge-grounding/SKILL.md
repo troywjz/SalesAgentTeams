@@ -1,15 +1,15 @@
 ---
 name: knowledge-grounding
-description: 从授权的办公技能知识快照中检索事实并返回可引用证据。
+description: 从企业授权的商品与服务知识快照中检索事实并返回可引用证据。
 ---
 
 # Knowledge Grounding Skill
 
-版本：1.1.0
+版本：1.1.1
 
 ## 目的
 
-为回复提供可追踪的课程、价格、交付、FAQ 和 SOP 事实，避免模型补造。
+为回复提供可追踪的商品/服务、价格、交付、FAQ 和 SOP 事实，避免模型补造。
 
 ## 输入
 
@@ -21,11 +21,11 @@ description: 从授权的办公技能知识快照中检索事实并返回可引�
 
 ## 触发条件
 
-客户询问课程、价格、交付、流程或方案匹配时在 SOP 决策后触发。
+客户询问商品/服务、价格、交付、流程或方案匹配时在 SOP 决策后触发。
 
 ## 依赖工具
 
-Sales Agent Bridge MCP 的 `run_knowledge_agent`、公开办公技能知识快照、`evidence-handoff`。
+Sales Agent Bridge MCP 的 `run_knowledge_agent`、企业授权或公开演示知识快照、`evidence-handoff`。
 
 ## 失败处理
 

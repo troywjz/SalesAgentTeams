@@ -1,109 +1,106 @@
 # SalesAgentTeams
 
-面向 GOAI Agent Infra 赛道的办公技能培训销售多智能体系统。六个业务 Agent 一一映射为六个 AgentTeams Worker；LangGraph 保留为业务流程内核，AgentTeams 负责团队协作，Skill 固化能力边界，MCP 提供角色受限工具和离线评估可视化。
+面向通用 To C 网络销售场景的多智能体协同系统，也是 [GOAI Agent Infra](https://goaihz.com/tracks?track=infra) 赛道的可运行作品。企业只需适配商品或服务知识、销售 SOP、优秀案例、风险规则和渠道数据，即可复用核心流程。
 
-公开配置默认使用真实模型正式展示：Web 使用 `18100`，独立 PostgreSQL 使用 `15432/sales_agent_demo`，不会访问原销售项目的 `8000` 或会计业务数据库。复制 `.env.example` 后填写 DeepSeek、阿里云和 SiliconFlow 三个 API Key，即可得到与已验收电脑一致的主模型回退、AgentTeams 和向量 RAG 配置；零 API 测试由独立验证脚本强制切换到本地模型。
+系统将每轮对话沉淀为客户画像、销售阶段和后续任务：LangGraph 负责业务路由、并行检索、安全复审、落库与调度；六个业务 Agent 映射为六个 AgentTeams Worker；10 个版本化 Skill 固化能力边界；两个 MCP 提供角色受限工具和离线评估能力。
 
-## 新电脑首次准备
+“自主推进”仅覆盖规则明确的销售流程。复杂报价、敏感承诺、负面情绪、知识不足和模型异常会暂停自动流程并转人工，项目不把自动推进表述为自动成交。
 
-支持 Windows 10/11。首次拉取或复制项目后，双击 `setup.cmd`，或在 PowerShell 中运行：
+## 三步启动
+
+已验证的一键流程面向 Windows 10/11。需要 Python 3.11+ 和 Docker Desktop；缺失时准备脚本会优先通过 `winget` 安装。
 
 ```powershell
+# 1. 检查环境、创建虚拟环境、安装依赖并准备镜像
 .\setup.cmd
-```
 
-准备脚本会：
+# 2. 编辑 setup.cmd 自动创建的 .env，填写以下三个 Key
+# DEEPSEEK_API_KEY=
+# ALIYUN_API_KEY=
+# SILICONFLOW_API_KEY=
 
-- 检查 Python 3.11+、Docker Desktop 和 Docker Compose；缺少 Python 或 Docker Desktop 时优先通过 `winget` 安装。
-- 创建 `.venv`，安装并执行 `pip check` 校验 `requirements.txt` 中的全部 Python 依赖。
-- `setup.cmd` 会在 `.env` 不存在时先复制 `.env.example`；PowerShell 准备脚本也有同样兜底，均不会覆盖已有配置或 Key。
-- 构建六个 Worker 包、拉取 PostgreSQL 镜像并构建两个 MCP 镜像。
-
-系统组件首次安装后如果 Windows 提示启用 WSL 2、虚拟化或重启，应完成提示后再次运行 `setup.cmd`。AgentTeams 控制面需要模型密钥，因此在第一次完整启动时由脚本通过固定提交与 SHA-256 校验后的官方安装器创建；其镜像也固定为本项目已经通过验收的 digest，避免 `latest` 漂移。
-
-然后填写 `.env`：
-
-- 填写 `DEEPSEEK_API_KEY`、`ALIYUN_API_KEY` 和 `SILICONFLOW_API_KEY`。模板已预填 `DEMO_MODE=false`、主模型和三个供应商的接口与模型名。
-- AgentTeams 默认启用，`AGENTTEAMS_LLM_API_KEY` 留空即可复用 `DEEPSEEK_API_KEY`；只有使用不同供应商时才需要单独填写。
-- Web 默认按 `DeepSeek → 阿里云 → SiliconFlow` 回退，每个配置最多调用一次；只有前一个供应商失败才会调用后一个。MiniMax 仍作为可选供应商保留。
-- 暂时只展示 Web、数据库和 MCP 时，可设置 `AGENTTEAMS_ENABLED=false`。
-
-`DEMO_SEED_DATA=true` 仅幂等导入仓库内公开的办公技能培训样例和展示看板，不决定模型模式，也不会连接或修改原会计培训数据库。`SALES_RAG_ENABLED=true` 默认启用办公技能销售案例向量检索，优先复用 `SILICONFLOW_API_KEY`，失败时回退到 `ALIYUN_API_KEY`；首次启动会为公开案例建索引，后续内容未变化时复用已有向量，避免重复计费。`SAFETY_VECTOR_ENABLED=false` 仍保持关闭。
-
-## 一键启动与关停
-
-完整启动：
-
-```powershell
+# 3. 启动 Web、数据库、两个 MCP、AgentTeams 和六个 Worker
 .\start_all.cmd
 ```
 
-脚本会幂等检查并启动 Docker Desktop、独立 Demo PostgreSQL、数据库表、后台 Web/API、两个 MCP、Worker 包服务、AgentTeams Controller/Manager 和六个 Worker，并逐层执行健康检查。重复运行不会重复创建进程或清空数据。
+`.env.example` 已配置正式展示所需的模型接口、`DeepSeek → 阿里云 → SiliconFlow` 回退链、AgentTeams 和向量 RAG。`AGENTTEAMS_LLM_API_KEY` 留空时复用 DeepSeek Key。首次启用 Docker Desktop 时，如系统要求启用 WSL 2、虚拟化或重启，完成后重新运行脚本即可。
 
-完整关停：
+停止全部比赛项目服务并保留数据卷：
 
 ```powershell
 .\stop_all.cmd
 ```
 
-关停脚本只停止 `SalesAgentTeams` 的宿主机进程和容器，保留 PostgreSQL/AgentTeams 数据卷，不会停止或删除原项目 `sales_agent`。`start_demo.cmd`、`scripts/setup_demo.ps1` 和 `scripts/start_demo.ps1` 作为旧入口继续可用。
+## 展示入口
 
-页面入口：
+| 入口 | 地址 | 本地 Demo 账号 |
+|---|---|---|
+| 销售端 | `http://127.0.0.1:18100/sales` | `wangjie@salesagent.com` / `123456` |
+| 客户模拟端 | `http://127.0.0.1:18100/customer` | 无需登录 |
+| 管理员端 | `http://127.0.0.1:18100/admin` | `admin` / `admin123` |
+| 健康检查 | `http://127.0.0.1:18100/health` | — |
 
-- 销售端：`http://127.0.0.1:18100/sales`，账号 `wangjie@salesagent.com`，密码 `123456`
-- 客户模拟端：`http://127.0.0.1:18100/customer`，无需登录
-- 管理员端：`http://127.0.0.1:18100/admin`，账号 `admin`，密码 `admin123`
-- 健康检查：`http://127.0.0.1:18100/health`
+完整启动后还会提供：
 
-以上账号只适用于本地公开 Demo。公开部署前必须修改密码和 `APP_SECRET_KEY`。
+| 服务 | 地址 | 用途 |
+|---|---|---|
+| Bridge MCP | `http://127.0.0.1:18081/mcp` | 六个角色受限业务工具 |
+| Evaluation MCP | `http://127.0.0.1:18082/mcp` | 离线回放、评分和 3D 热力图 |
+| AgentTeams | `http://127.0.0.1:18088` | Manager 与团队协作入口 |
+| Higress 控制台 | `http://127.0.0.1:18001` | AgentTeams 控制面入口 |
 
-## 架构与比赛能力
+以上账号只适用于本地公开 Demo。公开部署前必须修改默认密码和 `APP_SECRET_KEY`。
 
-- 六 Worker：Memory、Intent、SOP、Knowledge、Conversation/Team Leader、Safety。
-- 十个版本化 Skill：六个业务 Skill、团队协调、证据交接、离线评估和 3D 热力图。
-- 两个 MCP：销售 Agent Bridge（六个角色受限工具）和 Evaluation Insights（回放、评分、热力图）。
-- 两类上下文能力：受控会话记忆、授权知识检索；节点调用与 LLM 调用分别留痕。
-- 安全闭环：输入路由、任务分解、证据检索、草稿、安全审核、人工接管、记忆更新。
+## 架构与能力
 
-详细边界见 `docs/ARCHITECTURE.md`、`docs/AGENT_IDENTITIES.md` 和 `docs/operations/runbook.md`。
+| 层级 | 实现 |
+|---|---|
+| 业务流程 | FastAPI + LangGraph；维护客户画像、销售阶段、任务、定时推进与人工接管 |
+| 多 Agent 协同 | Memory、Intent、SOP、Knowledge、Conversation/Team Leader、Safety 六 Worker |
+| Skill 工程 | 6 个业务 Skill + 团队协调 + 证据交接 + 离线评估 + 3D 热力图，共 10 个版本化 Skill |
+| MCP 工具 | Bridge MCP 限制 Worker 工具权限；Evaluation MCP 生成离线评估产物 |
+| 数据与 RAG | 独立 PostgreSQL/pgvector 保存公开 Demo 数据、会话状态、任务和向量索引 |
+| 安全与可观测 | Safety 复审、人工接管、节点/模型调用记录、回退轨迹、RAG 命中和错误日志 |
 
-## 零 API 功能验证
+AgentTeams 不替换 LangGraph：前者负责 Worker 生命周期、跨 Agent 协作和可见交接，后者保留销售业务状态机与执行闭环。详细设计见 [架构说明](docs/ARCHITECTURE.md) 和 [Agent Identity 清单](docs/AGENT_IDENTITIES.md)。
+
+## 正式展示与零 API 回归
+
+| 模式 | 配置与用途 |
+|---|---|
+| 正式展示 | `DEMO_MODE=false`；启用三供应商回退、AgentTeams 和销售案例向量 RAG |
+| 零 API 回归 | 验证脚本在进程内强制使用确定性模拟客户端 `DemoLLMClient`，并关闭 AgentTeams 与向量能力，不调用真实 LLM 或 Embedding API |
+
+零 API 回归验证：
 
 ```powershell
 .\scripts\verify_demo.ps1
 ```
 
-该脚本会依次执行全量测试、确定性团队试运行、GOAI 就绪检查、开源审计和 Git 空白字符检查，并在任一步失败时立即返回非零结果。
+该脚本依次执行全量测试、六 Worker 确定性试运行、GOAI 就绪检查、开源审计和 Git 空白字符检查；不会修改 `.env`。确定性模拟客户端用于验证编排、接口、数据库、MCP 和页面链路，不代表真实模型回复质量。
 
-验证脚本会用进程级环境变量强制 `DEMO_MODE=true`、`LLM_PROVIDER=demo` 并关闭向量 RAG，因此即使本机 `.env` 为正式展示配置，也不会调用真实 LLM 或 Embedding。正式服务最多依次尝试 3 个供应商、推理预留为 0，六 Agent 的输出 token 上限也已按结构化结果收紧。
+## 数据与安全边界
 
-## MCP 与 AgentTeams
+- 比赛 Web 固定使用 `18100`，独立数据库固定使用 `15432/sales_agent_demo`；运行时护栏拒绝其他数据库名。
+- `DEMO_SEED_DATA=true` 只幂等导入仓库内可替换的公开销售样例；不会访问原项目数据库或历史会话。
+- 仓库不提交 `.env`、API Key、真实聊天、私有知识、评估原始结果或本地绝对路径。
+- Evaluation MCP 没有人工评分时只生成回放和盲评模板，不补造分数；历史离线盲评不等同于转化率提升。
+- 生命周期脚本只管理 `SalesAgentTeams` 的进程、容器和数据卷，不停止或删除其他项目。
 
-一键启动已经包含两个 HTTP MCP：
+## 文档与比赛材料
 
-```powershell
-docker compose -f deployment/docker-compose.mcp.yml up --build -d
-```
+| 文档 | 内容 |
+|---|---|
+| [方案说明](submission/preliminary/方案说明.md) | 场景闭环、AgentTeams 映射、Skill/MCP/RAG、安全与部署设计 |
+| [作品简介（500 字内）](submission/preliminary/作品简介_500字.md) | 初赛作品简介正文 |
+| [初赛方案 PPT](submission/preliminary/SalesAgentTeams_初赛方案.pptx) | 初赛路演材料 |
+| [Agent Identity 清单](docs/AGENT_IDENTITIES.md) | 六个 Agent 的身份、能力边界和协同关系 |
+| [GOAI 合规与得分映射](submission/preliminary/GOAI合规与得分映射.md) | 官网要求与项目证据对应关系 |
+| [运行证据清单](submission/preliminary/运行证据清单.md) | 启动、测试、MCP、AgentTeams 和真实 API 试运行证据 |
+| [历史评测与验证报告](submission/preliminary/历史评测与验证报告.md) | 离线盲评结论、短板与适用边界 |
+| [运维手册](docs/operations/runbook.md) | 单组件调试、故障排查、回滚和数据保护 |
+| [开源声明](submission/preliminary/开源声明.md) | 数据、密钥、第三方依赖和公开范围 |
 
-- 销售 Agent Bridge MCP：`http://127.0.0.1:18081/mcp`
-- Evaluation Insights MCP：`http://127.0.0.1:18082/mcp`
+## 许可证
 
-一键启动也会构建、托管并应用 Worker 包。以下命令仅用于单独调试：
-
-```powershell
-.\.venv\Scripts\python.exe agentteams\build_worker_packages.py
-.\scripts\start_agentteams_package_server.ps1
-docker cp deployment/agentteams/sales-agent-teams.yaml agentteams-controller:/tmp/sales-agent-teams.yaml
-docker exec agentteams-controller agt apply -f /tmp/sales-agent-teams.yaml
-.\scripts\start_agentteams_workers.ps1
-```
-
-`agt` 是 AgentTeams Controller 内的 CLI，不属于 Python 包，因此不写入 `requirements.txt`。AgentTeams Worker 的平台模型配置与 Web Demo 的本地确定性模型是两个独立运行层；`AGENTTEAMS_ENABLED=false` 或零 API 验证不会向 Manager 发送真实模型任务。
-
-## 评估边界
-
-公开数据位于 `evaluation/datasets/demo_cases.csv` 和 `evaluation/knowledge_snapshot/`。Evaluation MCP 在没有人工评分时只生成回放和盲评模板，不补造分数。既有授权离线盲评结论只作为历史证据写入 `submission/preliminary/历史评测与验证报告.md`，本次未重跑，也不把离线分数表述为转化率提升。
-
-## 比赛材料与许可证
-
-初赛简介、PPT/PDF、合规映射、运行证据和开源声明位于 `submission/preliminary/`。项目使用 AGPL-3.0；公开仓库不包含 `.env`、真实聊天、私有知识、模型密钥和原会计业务数据。
+项目使用 [GNU AGPL-3.0](LICENSE)。公开仓库只包含可替换的演示数据和可验证工程材料。

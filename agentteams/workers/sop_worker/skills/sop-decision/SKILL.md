@@ -5,7 +5,7 @@ description: 按销售阶段和客户意图给出下一步可执行动作。
 
 # SOP Decision Skill
 
-版本：1.1.0
+版本：1.1.1
 
 ## 目的
 
@@ -25,7 +25,7 @@ description: 按销售阶段和客户意图给出下一步可执行动作。
 
 ## 依赖工具
 
-Sales Agent Bridge MCP 的 `run_sop_agent`、版本化办公技能销售 SOP、`evidence-handoff`。
+Sales Agent Bridge MCP 的 `run_sop_agent`、版本化 To C 销售 SOP、`evidence-handoff`。
 
 ## 失败处理
 

@@ -2,9 +2,11 @@
 
 ## 定位
 
-SalesAgentTeams 是一个办公技能培训销售多智能体协同 Demo。原有 LangGraph 负责销售状态、路由、并行节点、风控和落库逻辑；AgentTeams 负责 Worker 生命周期、跨 Agent 协作、可见交接和容器化运行。
+SalesAgentTeams 是一个通用 To C 网络销售多智能体协同系统。企业通过适配商品/服务知识、销售 SOP、优秀案例、风险规则和客户渠道数据接入具体业务，核心 Agent、状态机和协作协议不依赖单一行业。系统的核心状态不只是一段对话历史，还包括客户画像、销售阶段、自动推进状态和后续任务。原有 LangGraph 负责这些销售状态的路由、并行检索、Safety 复审、落库和任务调度；AgentTeams 负责 Worker 生命周期、跨 Agent 协作、可见交接和容器化运行。
 
 AgentTeams 不替换 LangGraph。`sales_agent_teams.bridge` 是两者之间的适配层，保证原项目 Agent 可以被六个 Worker 复用。
+
+“自主推进”只覆盖规则明确的销售流程：依据阶段、SOP 与超时规则生成下一步动作，审核通过后发送并更新任务。强制关键词、知识不足、敏感问题、复杂报价、负面情绪、Safety 审核结果或模型异常都可以进入人工接管；接管期间自动回复和后续触达暂停。
 
 ## 六 Worker
 

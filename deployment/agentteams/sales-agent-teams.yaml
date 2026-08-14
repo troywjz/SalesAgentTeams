@@ -99,7 +99,7 @@ kind: Team
 metadata:
   name: sales-agent-team
 spec:
-  description: "六 Worker 办公技能培训销售多智能体协同团队"
+  description: "六 Worker 通用 To C 网络销售多智能体协同团队"
   peerMentions: true
   heartbeatEvery: 10m
   workerMembers:

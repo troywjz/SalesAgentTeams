@@ -1,11 +1,11 @@
 ---
 name: intent-classification
-description: 从办公技能培训咨询中识别意图、购买意愿、情绪和置信度。
+description: 从 To C 网络销售咨询中识别意图、购买意愿、情绪和置信度。
 ---
 
 # Intent Classification Skill
 
-版本：1.1.0
+版本：1.1.1
 
 ## 目的
 
