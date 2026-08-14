@@ -40,7 +40,7 @@ CONFIG_ITEMS = [
     AdminConfigItem("SAFETY_VECTOR_ENABLED", "风控向量审核", "风控配置", "bool", "false", "仅当风控规则有向量数据时启用向量审核。"),
     AdminConfigItem("SAFETY_VECTOR_THRESHOLD", "风控阈值", "风控配置", "float", "0.78", "风控向量匹配的触发阈值。"),
     AdminConfigItem("SAFETY_VECTOR_TOP_K", "风控召回数", "风控配置", "int", "3", "风控向量检索召回条数。"),
-    AdminConfigItem("SALES_RAG_ENABLED", "销售案例 RAG", "RAG 配置", "bool", "true", "默认启用办公技能销售案例向量检索；向量服务不可用时主对话自动降级。"),
+    AdminConfigItem("SALES_RAG_ENABLED", "销售案例 RAG", "RAG 配置", "bool", "true", "默认启用可替换销售案例的向量检索；向量服务不可用时主对话自动降级。"),
     AdminConfigItem("SALES_RAG_TOP_K", "案例召回数", "RAG 配置", "int", "3", "销售案例 RAG 检索条数。"),
     AdminConfigItem("SALES_RAG_MAX_REFERENCES", "案例注入条数", "RAG 配置", "int", "3", "注入回复生成的案例参考条数。"),
     AdminConfigItem("SALES_RAG_MIN_QUALITY_SCORE", "案例质量阈值", "RAG 配置", "float", "0.45", "可用案例片段的最低质量分。"),

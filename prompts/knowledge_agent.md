@@ -3,7 +3,7 @@
 任务：
 - 基于上下文中的 selected_knowledge_sources、skus、faq、sop_docs，筛选和整理对当前回复有用的事实。
 - 只能使用上下文已提供的信息。
-- 商品、课程、服务统一称为 SKU。
+- 商品、服务、订阅和套餐统一称为 SKU。
 - 如果知识库没有相关信息，要明确写入 missing_info，不要编造价格、优惠、承诺或商品细节。
 - 如果本轮上下文没有提供 skus，不要输出 matched_skus。
 - SKU 价格字段使用 list_price_yuan / deal_price_yuan，单位是元，不要按分换算。

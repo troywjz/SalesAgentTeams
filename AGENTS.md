@@ -6,7 +6,7 @@
 - `sales_agent_teams/`：业务 Agent 到 Worker 的契约与适配层。
 - `agentteams/`：Worker SOUL、版本化 Skill、打包和本地团队运行器。
 - `mcp_servers/`：销售 Bridge MCP 与评估/3D 热力图 MCP。
-- `data/`：只可提交公开办公技能示例；私有同名文件由 `.gitignore` 排除。
+- `data/`：只可提交可替换的公开销售示例；私有同名文件由 `.gitignore` 排除。
 - `evaluation/`：公开快照、数据集和评估代码；结果目录不提交。
 - `submission/preliminary/`：GOAI 初赛提交材料。
 - `scripts/setup_project.ps1`、`start_all.ps1`、`stop_all.ps1`：Windows 首次准备与完整生命周期入口；`.runtime/` 只存本地 PID、日志和下载的官方安装器。

@@ -5,7 +5,7 @@
 | 组件 | 端口 | 必需性 | 用途 |
 |---|---:|---|---|
 | 比赛 Web | 18100 | 演示必需 | 销售端、客户端、管理员端、API |
-| Demo PostgreSQL | 15432 | 演示必需 | 只保存办公技能 Demo 数据和对话 |
+| Demo PostgreSQL | 15432 | 演示必需 | 只保存公开销售样例数据和对话 |
 | Sales Bridge MCP | 18081 | AgentTeams/MCP 演示 | 六个角色受限工具 |
 | Evaluation MCP | 18082 | 评估可视化演示 | 回放、评分和 3D 热力图 |
 | Worker 包服务 | 18765 | AgentTeams 部署 | 只读公开 Worker zip |
@@ -37,7 +37,7 @@
 - 启动窗口提示端口被占用：先运行 `stop_all.cmd`；仍占用时根据提示检查该端口的非项目进程，脚本不会强制结束未知进程。
 - 数据库连接失败：检查 `docker compose -f deployment/docker-compose.demo-db.yml ps`，必须为 healthy。
 - 页面仍显示旧数据：运行 `scripts/seed_demo_data.ps1`，重启 Web 后强制刷新浏览器。
-- 正式展示仍出现本地模型：运行 `.venv\Scripts\python.exe scripts\check_runtime_config.py`，确认 `.env` 中 `DEMO_MODE=false`、`LLM_PROVIDER=deepseek` 且 DeepSeek、阿里云、SiliconFlow 三个 Key 已填写；完整重启后检查 `/health` 的 `llm` 字段。
+- 正式展示仍出现 Demo 模拟客户端：运行 `.venv\Scripts\python.exe scripts\check_runtime_config.py`，确认 `.env` 中 `DEMO_MODE=false`、`LLM_PROVIDER=deepseek` 且 DeepSeek、阿里云、SiliconFlow 三个 Key 已填写；完整重启后检查 `/health` 的 `llm` 字段。
 - 需要零 API 排障：运行 `scripts\verify_demo.ps1`；它只在当前验证进程中强制 Demo 模式，不修改 `.env`。
 - AgentTeams Worker 退出：重新运行 `start_all.cmd`；脚本会检查 18081、18765、Controller/Manager 和 Worker 内部 QwenPaw API，而非只判断容器是否为 `Up`。
 - Docker Desktop 未运行：`start_all.cmd` 会自动启动并等待最多 180 秒；若失败，检查 WSL 2、虚拟化和 Docker Desktop 状态。

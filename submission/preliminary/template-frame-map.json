@@ -1,24 +1,27 @@
 {
   "outputSlides": [
-    {"outputSlide":1,"sourceSlide":1,"narrativeRole":"opening thesis","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeId":"sh/ts7md4r2","reason":"办公技能培训定位"},{"action":"rewrite","shapeId":"sh/dgzetcfa","reason":"最新 Worker Skill MCP 数量"}]},
-    {"outputSlide":2,"sourceSlide":2,"narrativeRole":"one page evidence summary","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/w3i1sfa9","sh/r65knqtk","sh/q5wjelsz","sh/mtwrmxg7","sh/nu58f2hs","sh/wjy9sry9","sh/bip8jmho","sh/cnupgny5","sh/do3q9szq","sh/76twva5c","sh/65kfmpor","sh/hcvy14ne","sh/u94fqp4n","sh/p0vy54na","sh/4zmxwzmp","sh/onydsbmd","sh/9o7ulg3y","sh/a9gvulkj","sh/ba9cn6l4"],"reason":"替换模板占位文本并修正页码"}]},
-    {"outputSlide":3,"sourceSlide":3,"narrativeRole":"agenda","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/n6ls3alk","sh/83ulovat","sh/w7ulsvqp","sh/f29gbyx0","sh/re9g7yxo","sh/batgjixs","sh/y14jehgj","sh/ax4zax0n"],"reason":"更新比赛叙事目录"}]},
-    {"outputSlide":4,"sourceSlide":4,"narrativeRole":"scenario divider","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeId":"sh/0ba143al","reason":"办公技能场景标题"}]},
-    {"outputSlide":5,"sourceSlide":5,"narrativeRole":"scenario and value","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/z2tcnm5s","sh/yhkbe1o7","sh/032tgr6d"],"reason":"办公技能场景与安全闭环"}]},
-    {"outputSlide":6,"sourceSlide":6,"narrativeRole":"architecture divider","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/zi98nu94","sh/hcrqlcj6"],"reason":"数据隔离章节与页码"}]},
-    {"outputSlide":7,"sourceSlide":7,"narrativeRole":"layered architecture","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/dcbud0ra","sh/lsj6t47m","sh/nyh4jupo"],"reason":"数据和运行层边界"}]},
-    {"outputSlide":8,"sourceSlide":8,"narrativeRole":"agent loop divider","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/tkby9kzm","sh/07atgnmp"],"reason":"自主闭环章节与页码"}]},
-    {"outputSlide":9,"sourceSlide":9,"narrativeRole":"multi agent closed loop","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/0b65obm9","sh/qtkf21ob"],"reason":"六 Worker 与证据闭环"}]},
-    {"outputSlide":10,"sourceSlide":10,"narrativeRole":"skill divider","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/cbu58j2h","sh/r6pcv6lw","sh/0zu9ora5"],"reason":"10 Skill 章节与页码"}]},
-    {"outputSlide":11,"sourceSlide":11,"narrativeRole":"skill contracts","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/wbih4b6d","sh/ydcfq1kb"],"reason":"10 Skill 必填契约"}]},
-    {"outputSlide":12,"sourceSlide":12,"narrativeRole":"engineering divider","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/dcbm583y","sh/ojutgjah"],"reason":"工程验证章节与页码"}]},
-    {"outputSlide":13,"sourceSlide":13,"narrativeRole":"engineering evidence","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/bq9orito","sh/7i107edk"],"reason":"最新无 API 验证结论"},{"action":"replace","shapeId":"im/2lsju1kj","reason":"当前工程证据图"}]},
-    {"outputSlide":14,"sourceSlide":14,"narrativeRole":"open source divider","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/wbydknq1","sh/0buh8zy5","sh/kzy5on2p"],"reason":"开源和成本章节与页码"}]},
-    {"outputSlide":15,"sourceSlide":15,"narrativeRole":"open source reproducibility","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/k3y5ov21","sh/6p8va9kr"],"reason":"默认零 API 与独立数据库复现"}]},
-    {"outputSlide":16,"sourceSlide":16,"narrativeRole":"evaluation divider","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/ytkf2h8j","sh/zutgvm94","sh/j6947i9w"],"reason":"历史评测与进展章节"}]},
-    {"outputSlide":17,"sourceSlide":17,"narrativeRole":"historical evaluation evidence","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/1c7e50ni","sh/gbedwfmx","sh/658nudwf","sh/p0j6dcvy"],"reason":"历史盲评结论与边界"},{"action":"replace","shapeId":"im/5kbe9c3m","reason":"历史评测指标图"}]},
-    {"outputSlide":18,"sourceSlide":18,"narrativeRole":"conclusion divider","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/itw3upcf","sh/je5knut0","sh/f218rits"],"reason":"提交结论章节与页码"}]},
-    {"outputSlide":19,"sourceSlide":19,"narrativeRole":"team and closing","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/8v2pobax","sh/ul8fm9gf"],"reason":"团队、仓库和最终结论"}]}
+    {"outputSlide":1,"sourceSlide":1,"narrativeRole":"opening thesis","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/ts7md4r2","sh/dgzetcfa"],"reason":"以自主推进销售流程为主命题"}]},
+    {"outputSlide":2,"sourceSlide":2,"narrativeRole":"one page overview","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/ozy1ofad","sh/w3i1sfa9","sh/r65knqtk","sh/q5wjelsz","sh/mtwrmxg7","sh/nu58f2hs","sh/wjy9sry9","sh/bip8jmho","sh/cnupgny5","sh/do3q9szq","sh/76twva5c","sh/65kfmpor","sh/hcvy14ne","sh/u94fqp4n","sh/p0vy54na","sh/4zmxwzmp","sh/onydsbmd","sh/9o7ulg3y","sh/a9gvulkj","sh/ba9cn6l4"],"reason":"统一作品事实与页码"}]},
+    {"outputSlide":3,"sourceSlide":7,"narrativeRole":"autonomous progression boundary","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/dcbud0ra","sh/lsj6t47m","sh/nyh4jupo"],"reason":"说明自主推进与人工接管边界"},{"action":"replace","shapeId":"im/zi5kjqlw","reason":"使用文章运行框架图"}]},
+    {"outputSlide":4,"sourceSlide":5,"narrativeRole":"stateful product experience","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/cf2tcr61","sh/z2tcnm5s","sh/yhkbe1o7","sh/032tgr6d"],"reason":"说明三端产品与持续推进状态"},{"action":"replace","shapeIds":["im/apobah8v","im/bqxsjm9g"],"reason":"使用销售端与管理员端真实截图"}]},
+    {"outputSlide":5,"sourceSlide":7,"narrativeRole":"layered architecture","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/cb2tkvap","sh/dcbud0ra","sh/lsj6t47m","sh/nyh4jupo"],"reason":"解释 AgentTeams 与 LangGraph 分工"}]},
+    {"outputSlide":6,"sourceSlide":9,"narrativeRole":"six worker collaboration","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/1cfmhgne","sh/0b65obm9","sh/qtkf21ob"],"reason":"明确六 Worker 和统一证据交接"}]},
+    {"outputSlide":7,"sourceSlide":11,"narrativeRole":"skill contracts","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/xcryxg7y","sh/wbih4b6d","sh/ydcfq1kb"],"reason":"将 Skill 表述为版本化能力契约"}]},
+    {"outputSlide":8,"sourceSlide":5,"narrativeRole":"mcp and observability","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/cf2tcr61","sh/z2tcnm5s","sh/yhkbe1o7","sh/032tgr6d"],"reason":"说明 MCP 与可观测闭环"},{"action":"replace","shapeIds":["im/apobah8v","im/bqxsjm9g"],"reason":"使用管理看板与评估热力图"}]},
+    {"outputSlide":9,"sourceSlide":13,"narrativeRole":"runtime evidence","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/q50nydsj","sh/bq9orito","sh/7i107edk"],"reason":"更新 89 项测试和运行证据"},{"action":"replace","shapeId":"im/2lsju1kj","reason":"使用客户模拟端真实截图"}]},
+    {"outputSlide":10,"sourceSlide":17,"narrativeRole":"historical evaluation","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/1c7e50ni","sh/gbedwfmx","sh/658nudwf","sh/p0j6dcvy"],"reason":"陈述盲评结果与局限"},{"action":"replace","shapeId":"im/5kbe9c3m","reason":"使用文章评估差值 3D 热力图"}]},
+    {"outputSlide":11,"sourceSlide":15,"narrativeRole":"reproducible open source delivery","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/547mhg3m","sh/k3y5ov21","sh/6p8va9kr"],"reason":"更新一键脚本、三供应商和向量 RAG 口径"},{"action":"replace","shapeId":"im/cri94vet","reason":"使用文章运行架构图"}]},
+    {"outputSlide":12,"sourceSlide":19,"narrativeRole":"closing synthesis","reuseMode":"duplicate-slide","editTargets":[{"action":"rewrite","shapeIds":["sh/9gb6xgbi","sh/8v2pobax","sh/ul8fm9gf"],"reason":"以可运行、可审计、可接管收束"}]}
   ],
-  "omittedSourceSlides": []
+  "omittedSourceSlides": [
+    {"sourceSlide":3,"reason":"删除目录页，直接进入核心叙事"},
+    {"sourceSlide":4,"reason":"删除纯章节过渡页"},
+    {"sourceSlide":6,"reason":"删除纯章节过渡页"},
+    {"sourceSlide":8,"reason":"删除纯章节过渡页"},
+    {"sourceSlide":10,"reason":"删除纯章节过渡页"},
+    {"sourceSlide":12,"reason":"删除纯章节过渡页"},
+    {"sourceSlide":14,"reason":"删除纯章节过渡页"},
+    {"sourceSlide":16,"reason":"删除纯章节过渡页"},
+    {"sourceSlide":18,"reason":"删除纯章节过渡页"}
+  ]
 }

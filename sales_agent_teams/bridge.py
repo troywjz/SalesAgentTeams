@@ -18,9 +18,9 @@ from .contracts import AgentRequest, AgentResponse, Handoff
 
 
 WORKER_SKILLS = {
-    "intent_worker": "intent-classification@1.1.0",
-    "sop_worker": "sop-decision@1.1.0",
-    "knowledge_worker": "knowledge-grounding@1.1.0",
+    "intent_worker": "intent-classification@1.1.1",
+    "sop_worker": "sop-decision@1.1.1",
+    "knowledge_worker": "knowledge-grounding@1.1.1",
     "conversation_worker": "reply-drafting@1.1.0",
     "safety_worker": "safety-review@1.1.0",
     "memory_worker": "memory-update@1.1.0",

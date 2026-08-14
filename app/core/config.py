@@ -8,9 +8,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 class Settings(BaseSettings):
-    app_name: str = Field(default="SalesAgentTeams 办公技能培训销售智能体", alias="APP_NAME")
+    app_name: str = Field(default="SalesAgentTeams 通用 To C 网络销售智能体", alias="APP_NAME")
     app_env: str = Field(default="showcase", alias="APP_ENV")
-    # 没有 .env 时保留确定性本地模型作为代码级安全兜底；公开 .env.example
+    # 没有 .env 时保留确定性模拟客户端作为代码级安全兜底；公开 .env.example
     # 则采用真实模型展示配置，并由启动前检查阻止密钥缺失时静默降级。
     demo_mode: bool = Field(default=True, alias="DEMO_MODE")
     demo_agent_delay_ms: int = Field(default=60, alias="DEMO_AGENT_DELAY_MS")
